@@ -1,0 +1,64 @@
+name: 4. Teardown - Destruir Infraestrutura (AWS)
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Ambiente a ser destruído (staging | production)'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      confirm_destroy:
+        description: 'Digite exatamente: CONFIRM_DESTROY_NETWORK'
+        required: true
+        type: string
+
+permissions:
+  id-token: write  # Obrigatório para autenticação segura via OIDC (Sem Chaves)
+  contents: read
+
+jobs:
+  destroy-infrastructure:
+    name: Excluir Infraestrutura na AWS
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.stage }}
+    steps:
+      - name: Validar Frase de Confirmação de Segurança
+        run: |
+          if [ "${{ github.event.inputs.confirm_destroy }}" != "CONFIRM_DESTROY_NETWORK" ]; then
+            echo "❌ ERRO DE SEGURANÇA: Frase de confirmação incorreta. Destruição abortada!"
+            exit 1
+          fi
+          echo "✅ Frase de segurança confirmada. Iniciando processo de destruição no estágio: ${{ github.event.inputs.stage }}"
+
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Autenticar na AWS Homologação via OIDC (Sem Chaves)
+        if: ${{ github.event.inputs.stage == 'staging' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+          aws-region: us-east-1
+
+      - name: Autenticar na AWS Produção via OIDC (Sem Chaves)
+        if: ${{ github.event.inputs.stage == 'production' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_PROD }}
+          aws-region: us-east-1
+
+      - name: Executar Remoção SST v4
+        run: npx sst remove --stage ${{ github.event.inputs.stage }}

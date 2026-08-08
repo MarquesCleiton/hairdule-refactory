@@ -1,0 +1,53 @@
+name: 1. CI - Validar Feature & Criar Branch release-vX.Y.Z
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  validate-and-create-release-branch:
+    name: Validar Código & Criar Branch de Release Versionada
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Validar Sintaxe & Compilação TypeScript
+        run: npx tsc --noEmit
+
+      - name: Gerar Nome da Versão de Release (vX.Y.Z)
+        id: versioning
+        run: |
+          TIMESTAMP=$(date +'%Y%m%d-%H%M')
+          VERSION="release-v1.0.${TIMESTAMP}"
+          echo "RELEASE_BRANCH=${VERSION}" >> $GITHUB_ENV
+          echo "Versão gerada: ${VERSION}"
+
+      - name: Criar/Atualizar Branch de Release e Abrir PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ env.RELEASE_BRANCH }}
+          commit-message: "ci: validações da feature concluídas - preparando release"
+          title: "PR Automático de Release: Merge ${{ github.ref_name }} -> ${{ env.RELEASE_BRANCH }}"
+          body: |
+            ## 🚀 Pull Request Automático de Release Versionado
+            
+            - **Feature de Origem:** `${{ github.ref_name }}`
+            - **Nova Branch de Release:** `${{ env.RELEASE_BRANCH }}`
+            - **Validações:** ✅ Compilação TypeScript e sintaxe SST v4 validadas com sucesso.
+            
+            O merge nesta branch irá disparar o deploy automático na conta **AWS Homologação**.
+          base: main

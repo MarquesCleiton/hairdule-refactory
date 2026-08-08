@@ -205,25 +205,31 @@ Cada componente do sistema é um **repositório independente** no GitHub. As Lam
 
 | # | Repositório | Tipo | Porta Local | Descrição |
 |---|---|---|---|---|
-| 1 | `hairdule-shared` | Lambda Layer (Python) | — | Models SQLAlchemy, schemas Pydantic, auth middleware, utils |
-| 2 | `hairdule-infra` | IaC (SST) | — | Infraestrutura AWS (Aurora, Cognito, API GW, S3, CloudFront) |
-| 3 | `hairdule-auth-service` | Lambda (Python) | 3001 | Signup, Login, Password, Refresh |
-| 4 | `hairdule-barbershop-service` | Lambda (Python) | 3002 | Dados da barbearia, Onboarding |
-| 5 | `hairdule-staff-service` | Lambda (Python) | 3003 | CRUD de profissionais |
-| 6 | `hairdule-services-service` | Lambda (Python) | 3004 | CRUD de serviços |
-| 7 | `hairdule-availability-service` | Lambda (Python) | 3005 | Horários, bloqueios, cálculo de slots |
-| 8 | `hairdule-appointments-service` | Lambda (Python) | 3006 | Agendamentos, auditoria, máquina de estados |
-| 9 | `hairdule-subscriptions-service` | Lambda (Python) | 3007 | Planos, Stripe, controle de escrita |
-| 10 | `hairdule-notifications-service` | Lambda (Python) | 3008 | In-app, push VAPID, preferências |
-| 11 | `hairdule-analytics-service` | Lambda (Python) | 3009 | Métricas, relatórios, AI insights |
-| 12 | `hairdule-app-dashboard` | Frontend | 4300 | Angular — Painel de gestão |
-| 13 | `hairdule-app` | Frontend | 4200 | Angular — Portal público de agendamento |
+| 1 | `hairdule-shared` | Lambda Layer (Python) | — | ORM mappings (DML), schemas Pydantic, auth middleware, utils |
+| 2 | `hairdule-db` | Banco de Dados (DDL) | — | Migrações Alembic, domain tables, seeds, runner.py |
+| 3 | `hairdule-infra-auth` | IaC (SST) | — | Cognito User Pools, Clients, Triggers |
+| 4 | `hairdule-infra-api` | IaC (SST) | — | API Gateway v2, AWS WAF, CORS, Custom Domains |
+| 5 | `hairdule-infra-storage` | IaC (SST) | — | Buckets S3, CloudFront CDN, OAC |
+| 6 | `hairdule-infra-events` | IaC (SST) | — | EventBridge, Scheduler, Cron Jobs |
+| 7 | `hairdule-auth-service` | Lambda (Python) | 3001 | Signup, Login, Password, Refresh |
+| 8 | `hairdule-barbershop-service` | Lambda (Python) | 3002 | Dados da barbearia, Onboarding |
+| 9 | `hairdule-staff-service` | Lambda (Python) | 3003 | CRUD de profissionais |
+| 10 | `hairdule-services-service` | Lambda (Python) | 3004 | CRUD de serviços |
+| 11 | `hairdule-availability-service` | Lambda (Python) | 3005 | Horários, bloqueios, cálculo de slots |
+| 12 | `hairdule-appointments-service` | Lambda (Python) | 3006 | Agendamentos, auditoria, máquina de estados |
+| 13 | `hairdule-subscriptions-service` | Lambda (Python) | 3007 | Planos, Stripe, controle de escrita |
+| 14 | `hairdule-notifications-service` | Lambda (Python) | 3008 | In-app, push VAPID, preferências |
+| 15 | `hairdule-analytics-service` | Lambda (Python) | 3009 | Métricas, relatórios, AI insights |
+| 16 | `hairdule-app-dashboard` | Frontend | 4300 | Angular — Painel de gestão |
+| 17 | `hairdule-app` | Frontend | 4200 | Angular — Portal público de agendamento |
 
 ---
 
-### 4.1 `hairdule-shared` — Lambda Layer (Pacote Python Compartilhado)
+### 4.1 `hairdule-shared` — Lambda Layer (Pacote Python Compartilhado — Somente DML)
 
-Publicado como **Lambda Layer** na AWS e consumido localmente via `pip install -e ../hairdule-shared`. Contém todos os models, schemas, middleware e utilitários compartilhados entre as Lambdas.
+Publicado como **Lambda Layer** na AWS e consumido localmente via `pip install -e ../hairdule-shared`. Contém os mapeamentos ORM (DML), schemas Pydantic, middleware e utilitários compartilhados entre as Lambdas.
+
+> **⚠️ Restrição de Acesso:** O `hairdule-shared` **NÃO pode alterar a estrutura do banco de dados**. Toda criação/alteração de tabelas, índices e constraints é responsabilidade exclusiva do `hairdule-db`. O `hairdule-shared` apenas realiza operações de CRUD (leitura e escrita de dados).
 
 ```
 hairdule-shared/
@@ -241,7 +247,7 @@ hairdule-shared/
 │       │   ├── base.py          # DeclarativeBase para todos os models
 │       │   ├── models/
 │       │   │   ├── __init__.py  # Re-exporta todos os models
-│       │   │   ├── enums.py     # business_type, barbershop_status, appointment_status, etc.
+│       │   │   ├── domain.py    # ORM mappings para as 9 domain tables (read-only)
 │       │   │   ├── barbershop.py
 │       │   │   ├── user_role.py
 │       │   │   ├── staff.py
@@ -309,19 +315,7 @@ hairdule-shared/
 │           ├── price.py         # Centavos ↔ Reais
 │           └── phone.py         # Validação/formatação telefone BR
 │
-├── alembic/                     # Migrações geradas pelo Alembic
-│   ├── alembic.ini
-│   ├── env.py                   # Configuração Alembic (usa models do hairdule_shared)
-│   ├── versions/
-│   │   ├── 0001_init_enums_and_barbershops.py
-│   │   ├── 0002_staff_and_roles.py
-│   │   ├── 0003_services_and_hours.py
-│   │   └── ...
-│   └── script.py.mako
-│
 ├── scripts/
-│   ├── seed.py                  # Dados de teste para dev local
-│   ├── migrate.py               # Runner de migrações (wrapper Alembic)
 │   └── setup_localstack.py      # Criar Cognito User Pool + S3 bucket no LocalStack
 │
 └── tests/
@@ -346,29 +340,146 @@ cd layer && zip -r hairdule-shared-layer.zip python/
 
 ---
 
-### 4.2 `hairdule-infra` — Infraestrutura AWS (SST v4)
+### 4.1b `hairdule-db` — Banco de Dados (DDL Isolado, Sem Triggers/Views)
 
-Define **todos** os recursos AWS de forma reproduzível. As Lambdas Python referenciam seus repos como sources.
+Repositório **exclusivo** para toda a estrutura do banco de dados. Concentra o script SQL completo (`schema.sql`), migrações Alembic DDL, domain tables e scripts de seed. Os microsserviços e o `hairdule-shared` **não têm permissão** para alterar a estrutura do banco — apenas operações de CRUD (DML).
+
+> **⚠️ Princípio de Arquitetura Limpa:** 
+> - O banco de dados é um **armazenamento puro persistente** (tabelas, chaves primárias/estrangeiras e índices).
+> - **Zero Triggers, Zero Stored Procedures, Zero Views** no banco de dados.
+> - Todas as regras de negócio, geradores de código, timestamps de atualização, mascaramentos PII e visibilidades de agenda vivem **exclusivamente na camada de aplicação (microsserviços FastAPI / Pydantic / ORM)**.
+> - As regras de aplicação estão documentadas em [BUSINESS_RULES_HANDLED_IN_SERVICES.md](file:///d:/Documentos/Projetos/Hairdule/Hairdule%202.0/Projeto%20novo/hairdule-db/BUSINESS_RULES_HANDLED_IN_SERVICES.md).
 
 ```
-hairdule-infra/
+hairdule-db/
+├── pyproject.toml               # name = "hairdule-db", deps: alembic, psycopg, python-dotenv
+├── schema.sql                   # Script SQL puro com todas as tabelas de dominio, negocios e indices
+├── BUSINESS_RULES_HANDLED_IN_SERVICES.md # Documentação da logica de negocio mantida nos serviços
+├── README.md
+│
+├── alembic/
+│   ├── alembic.ini              # Configuração Alembic
+│   ├── env.py                   # Configuração (connection string via env var)
+│   ├── script.py.mako           # Template de migração
+│   └── versions/
+│       └── 0001_initial_domain_and_business_schema.py
+│
+└── scripts/
+    └── runner.py                # Orquestrador 6 passos (Check -> Create -> Destroy Check -> Script Check -> Script Validate -> Script Exec)
+```
+
+#### Domain Tables (Tabelas de Domínio)
+
+Substituem os ENUMs nativos do PostgreSQL por tabelas de lookup, permitindo tradução amigável dos status/funções e maior flexibilidade (adicionar novos valores sem migração DDL).
+
+**Estrutura padrão de cada domain table:**
+```sql
+CREATE TABLE domain_<name> (
+    code VARCHAR(50) PRIMARY KEY,        -- Chave programática (ex: 'BARBERSHOP', 'AGENDADO')
+    name VARCHAR(100) NOT NULL,          -- Nome amigável (ex: 'Barbearia', 'Agendado')
+    description VARCHAR(255),            -- Descrição opcional
+    display_order INTEGER DEFAULT 0,     -- Ordem de exibição no frontend
+    is_active BOOLEAN DEFAULT true,      -- Soft-delete
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+```
+
+**9 Domain Tables:**
+
+| Tabela | Registros (Seed) |
+|--------|------------------|
+| `domain_business_types` | Barbearia, Salão, Spa, Esmalteria, Outro |
+| `domain_barbershop_statuses` | Em Cadastro, Ativo, Inativo, Suspenso |
+| `domain_staff_roles` | Dono, Gerente, Barbeiro, Recepcionista |
+| `domain_agenda_visibilities` | Própria, Leitura Time, Acesso Total |
+| `domain_appointment_statuses` | Agendado, Confirmado, Em Atendimento, Finalizado, Cancelado Cliente, Cancelado Barbearia, No-Show, Remarcado |
+| `domain_subscription_statuses` | Trial, Ativo, Atenção, Carência, Bloqueado, Cancelado |
+| `domain_billing_cycles` | Mensal, Anual |
+| `domain_block_types` | Pontual, Recorrente, Férias |
+| `domain_notification_types` | Novo Agendamento, Cancelamento, Lembrete, Sistema |
+
+---
+
+## 5. Arquitetura e Pipeline do Repositório do Banco (`hairdule-db`)
+
+O repositório **`hairdule-db`** funciona como um orquestrador declarativo e automatizado para o ciclo de vida do banco de dados em **6 Passos**:
+
+### Fluxo de Execução em 6 Passos (`runner.py`)
+
+1. **Validar se o banco existe**: Consulta conectividade via driver PostgreSQL.
+2. **Caso não exista, criar!**: Se não existir, executa o provisionamento de infraestrutura (Docker Compose local ou AWS Aurora Serverless v2).
+3. **Validar se destroy está ativo (`DESTROY=true`)**: Se ativo, executa exclusão total do banco, **encerra o fluxo imediatamente** e pula as etapas seguintes.
+4. **Caso destroy desativado, validar se há script para executar**: Verifica se o parâmetro de script SQL / Alembic foi passado.
+5. **Validar Script**:
+   - Verifica existência física do arquivo SQL.
+   - Sintaxe e regras de segurança: **Proíbe estritamente instruções que tentem renomear ou alterar o nome do banco** (`ALTER DATABASE ... RENAME TO ...` ou `DROP DATABASE`), já que a criação e nome do banco são gerenciados unicamente pela pipeline.
+6. **Executar Script**: Executa o script SQL ou comando Alembic validado de forma transacional.
+│  Se existe → pula para Etapa 2.                         │
+├─────────────────────────────────────────────────────────┤
+│  ETAPA 2: VALIDATE DESTROY                              │
+│  Se destroy=true E banco existe → DROP ALL              │
+│  (com confirmação de segurança).                        │
+│  Se destroy=false → pula para Etapa 3.                  │
+├─────────────────────────────────────────────────────────┤
+│  ETAPA 3: EXECUTE SCRIPTS                               │
+│  Executa 1..N scripts SQL/Alembic configurados          │
+│  por parâmetro. Ex: alembic upgrade head + seeds.       │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Invocação:**
+```bash
+# Criar banco (se não existe) + rodar migrações + popular seeds
+python scripts/runner.py --destroy=false --scripts="alembic:head,seed:all"
+
+# Destruir tudo e recriar do zero (ambiente dev)
+python scripts/runner.py --destroy=true --scripts="alembic:head,seed:all"
+
+# Apenas rodar migrações (sem seed)
+python scripts/runner.py --destroy=false --scripts="alembic:head"
+```
+
+---
+
+### 4.2 Infraestrutura AWS — Repositórios Modularizados (SST v4)
+
+A infraestrutura do projeto é dividida em **4 repositórios especializados** por domínio de recurso AWS. Cada um é um projeto SST v4 independente com seu próprio deploy e pipeline CI/CD.
+
+#### 4.2a `hairdule-infra-auth` — Autenticação (Cognito)
+
+```
+hairdule-infra-auth/
 ├── package.json
 ├── tsconfig.json
-├── sst.config.ts                # Ponto de entrada SST
+├── sst.config.ts
 │
 ├── infra/
-│   ├── database.ts              # Aurora Serverless v2 (PostgreSQL 16, MinACU 0.5, MaxACU 4.0)
+│   ├── cognito.ts               # Cognito User Pool + App Client
+│   ├── triggers.ts              # Lambda triggers (pre-signup, post-confirmation)
+│   └── secrets.ts               # JWT Secret + API keys no Secrets Manager
+│
+└── scripts/
+    └── deploy-staging.sh
+```
+
+#### 4.2b `hairdule-infra-api` — API Gateway + WAF
+
+```
+hairdule-infra-api/
+├── package.json
+├── tsconfig.json
+├── sst.config.ts
+│
+├── infra/
 │   ├── vpc.ts                   # VPC + Security Groups + Subnets
-│   ├── auth.ts                  # Cognito User Pool + Client
+│   ├── database.ts              # Aurora Serverless v2 (PostgreSQL 16, MinACU 0.5, MaxACU 4.0)
 │   ├── api.ts                   # API Gateway v2 (HTTP API) + rotas para cada Lambda
 │   ├── functions.ts             # Definição das 9 Lambdas Python (source, handler, runtime, layers)
 │   ├── layers.ts                # Lambda Layer hairdule-shared
-│   ├── storage.ts               # S3 bucket para fotos
-│   ├── cdn.ts                   # CloudFront distributions (portal + dashboard)
-│   ├── waf.ts                   # AWS WAF rules
-│   ├── secrets.ts               # Secrets Manager entries
-│   ├── budgets.ts               # AWS Budgets + alertas
-│   └── scheduler.ts             # EventBridge rules (tarefas agendadas)
+│   ├── waf.ts                   # AWS WAF rules (rate limit, anti-bot, geo-blocking)
+│   ├── cors.ts                  # CORS config (dev vs prod)
+│   ├── domains.ts               # Custom Domains (api.hairdule.com.br)
+│   └── budgets.ts               # AWS Budgets + alertas
 │
 └── scripts/
     └── deploy-staging.sh
@@ -397,7 +508,44 @@ const authService = new sst.aws.Function("AuthService", {
 });
 ```
 
----
+#### 4.2c `hairdule-infra-storage` — S3 + CloudFront CDN
+
+```
+hairdule-infra-storage/
+├── package.json
+├── tsconfig.json
+├── sst.config.ts
+│
+├── infra/
+│   ├── storage.ts               # S3 bucket para fotos (upload de logo/perfil)
+│   ├── cdn.ts                   # CloudFront distributions (portal + dashboard)
+│   └── oac.ts                   # Origin Access Control (S3 → CloudFront)
+│
+└── scripts/
+    └── deploy-staging.sh
+```
+
+#### 4.2d `hairdule-infra-events` — EventBridge + Scheduler
+
+```
+hairdule-infra-events/
+├── package.json
+├── tsconfig.json
+├── sst.config.ts
+│
+├── infra/
+│   └── scheduler.ts             # EventBridge rules + cron jobs
+│                                # - auto-status-transition
+│                                # - revert-pending-cancellations
+│                                # - send-appointment-reminders
+│                                # - rate-limit-cleanup
+│                                # - appointments-retrospective
+│
+└── scripts/
+    └── deploy-staging.sh
+```
+
+
 
 ### 4.3 Template de Lambda — Estrutura Padrão (Python)
 
@@ -792,11 +940,15 @@ Subir Docker Compose com PostgreSQL 16 + LocalStack (conforme seção 3). Criar 
 
 Criar e inicializar os seguintes repositórios nesta fase:
 
-1. **`hairdule-shared`** — Pacote Python com models SQLAlchemy, schemas Pydantic, auth middleware, utils, migrações Alembic
-2. **`hairdule-infra`** — SST config com definição dos recursos AWS + Lambda Layer
-3. **`hairdule-auth-service`** — Primeira Lambda Python (será implementada na Fase 1)
-4. **`hairdule-app-dashboard`** — Angular 18 + Angular Material (tema Aqua `#22BEF5`)
-5. **`hairdule-app`** — Angular 18 com SSR (tema leve, mobile-first)
+1. **`hairdule-db`** — Banco de dados isolado: migrações Alembic (DDL), 9 domain tables, seeds, `runner.py` (3 etapas)
+2. **`hairdule-shared`** — Pacote Python (DML only): ORM mappings SQLAlchemy, schemas Pydantic, auth middleware, utils
+3. **`hairdule-infra-auth`** — SST: Cognito User Pools, Clients, Triggers
+4. **`hairdule-infra-api`** — SST: API Gateway v2, WAF, VPC, Aurora, Lambdas, Lambda Layer
+5. **`hairdule-infra-storage`** — SST: S3, CloudFront CDN, OAC
+6. **`hairdule-infra-events`** — SST: EventBridge, Scheduler, Cron Jobs
+7. **`hairdule-auth-service`** — Primeira Lambda Python (será implementada na Fase 1)
+8. **`hairdule-app-dashboard`** — Angular 18 + Angular Material (tema Aqua `#22BEF5`)
+9. **`hairdule-app`** — Angular 18 com SSR (tema leve, mobile-first)
 
 Os demais repos de Lambda serão criados conforme cada fase demandar.
 
@@ -816,9 +968,15 @@ Cada serviço deve responder localmente:
 - [ ] Node.js 22 LTS instalado (`node -v`)
 - [ ] Docker Desktop instalado e rodando
 - [ ] `docker compose up -d` → PostgreSQL e LocalStack healthy
-- [ ] `hairdule-shared`: projeto criado, `pip install -e .` ok, models base definidos
-- [ ] `hairdule-shared`: `alembic upgrade head` cria schema no PostgreSQL local
-- [ ] `hairdule-infra`: projeto SST criado, `sst.config.ts` com recursos definidos
+- [ ] `hairdule-db`: projeto criado, `runner.py` funcional com as 3 etapas (check/create, destroy, execute)
+- [ ] `hairdule-db`: 9 domain tables criadas via migração inicial (`0001_init_domain_tables.py`)
+- [ ] `hairdule-db`: Seeds das domain tables populadas automaticamente via `runner.py`
+- [ ] `hairdule-db`: `python scripts/runner.py --destroy=false --scripts="alembic:head,seed:all"` executa sem erros
+- [ ] `hairdule-shared`: projeto criado (DML only), `pip install -e .` ok, ORM mappings para domain tables definidos em `models/domain.py`
+- [ ] `hairdule-infra-auth`: projeto SST criado, `sst.config.ts` com Cognito User Pool
+- [ ] `hairdule-infra-api`: projeto SST criado, `sst.config.ts` com API Gateway + VPC + Aurora + Lambdas
+- [ ] `hairdule-infra-storage`: projeto SST criado, `sst.config.ts` com S3 + CloudFront
+- [ ] `hairdule-infra-events`: projeto SST criado, `sst.config.ts` com EventBridge
 - [ ] `hairdule-auth-service`: projeto criado, `uvicorn src.app:app --port 3001 --reload` → Swagger em `http://localhost:3001/docs`
 - [ ] `hairdule-app-dashboard`: `ng serve --port 4300` → rodando em `http://localhost:4300`
 - [ ] `hairdule-app`: `ng serve --port 4200` → rodando em `http://localhost:4200`
@@ -833,17 +991,17 @@ Cada serviço deve responder localmente:
 > **Estimativa:** 3-5 dias  
 > **Depende de:** Fase 0
 
-### Banco de Dados — Migrações
+### Banco de Dados — Migrações (via `hairdule-db`)
 
-Tabelas criadas nesta fase (via `hairdule-shared`):
+Tabelas criadas nesta fase (DDL no `hairdule-db`, ORM mappings no `hairdule-shared`):
 
 | Tabela | Descrição |
 |---|---|
-| `barbershops` | Estabelecimentos (todos os campos do ANALISE.md) |
-| `user_roles` | Vínculo usuário ↔ barbearia (user_id, barbershop_id, role) |
-| `staff` | Profissionais (user_id, barbershop_id, name, email, phone, role, active) |
+| `barbershops` | Estabelecimentos (todos os campos do ANALISE.md). FK → `domain_business_types`, `domain_barbershop_statuses` |
+| `user_roles` | Vínculo usuário ↔ barbearia (user_id, barbershop_id, role). FK → `domain_staff_roles` |
+| `staff` | Profissionais (user_id, barbershop_id, name, email, phone, role, active). FK → `domain_staff_roles`, `domain_agenda_visibilities` |
 
-ENUMs: `business_type`, `barbershop_status`, `staff_role`, `agenda_visibility`
+Domain tables utilizadas: `domain_business_types`, `domain_barbershop_statuses`, `domain_staff_roles`, `domain_agenda_visibilities` (já criadas na Fase 0)
 
 ### Backend — `hairdule-auth-service`
 
@@ -895,12 +1053,12 @@ Design: Angular Material, tema Aqua, layout centrado com card glassmorphism, val
 
 ### ✅ Checklist — Fase 1
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para ENUMs (business_type, barbershop_status, staff_role, agenda_visibility)
-- [ ] Model SQLAlchemy para `barbershops` (todos os campos)
-- [ ] Model SQLAlchemy para `user_roles` e `staff`
-- [ ] Índices criados (idx_barbershops_owner, idx_barbershops_status, idx_staff_barbershop, idx_staff_user)
-- [ ] Migração Alembic gerada e aplicada no PostgreSQL local
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mappings no `hairdule-shared` para domain tables (`models/domain.py`) — read-only
+- [ ] ORM mapping no `hairdule-shared` para `barbershops` (FK → `domain_business_types.id`, `domain_barbershop_statuses.id`)
+- [ ] ORM mapping no `hairdule-shared` para `user_roles` e `staff` (FK → `domain_staff_roles.id`, `domain_agenda_visibilities.id`)
+- [ ] Índices criados no `hairdule-db` (idx_barbershops_owner, idx_barbershops_status, idx_staff_barbershop, idx_staff_user)
+- [ ] Migração DDL criada no `hairdule-db` (`0002_barbershops_users_staff.py`) e aplicada via `runner.py`
 
 **Backend — auth-service:**
 - [ ] IAuthProvider Protocol implementado
@@ -938,10 +1096,10 @@ Design: Angular Material, tema Aqua, layout centrado com card glassmorphism, val
 - [ ] Dados verificáveis no banco (SQLAlchemy query)
 
 **Deploy AWS:**
-- [ ] Cognito User Pool criado via SST
-- [ ] Lambda Layer hairdule-shared deployada
-- [ ] Lambda auth-service deployada (Python 3.12)
-- [ ] API Gateway route `/auth/*` configurada
+- [ ] Cognito User Pool criado via SST (`hairdule-infra-auth`)
+- [ ] Lambda Layer hairdule-shared deployada (`hairdule-infra-api`)
+- [ ] Lambda auth-service deployada (Python 3.12) (`hairdule-infra-api`)
+- [ ] API Gateway route `/auth/*` configurada (`hairdule-infra-api`)
 - [ ] Teste em staging com Cognito real
 - [ ] Pipeline CI/CD funcional (ruff → mypy → pytest → deploy)
 
@@ -953,7 +1111,7 @@ Design: Angular Material, tema Aqua, layout centrado com card glassmorphism, val
 > **Estimativa:** 3-4 dias  
 > **Depende de:** Fase 1
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
 Tabelas: `services`, `staff_services`, `business_hours`, `consents`
 
@@ -983,12 +1141,12 @@ Dados intermediários em localStorage, envio único no passo final.
 
 ### ✅ Checklist — Fase 2
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `services` (todos os campos: duration, price, buffer, pausa, variável)
-- [ ] Model SQLAlchemy para `staff_services` (N:N)
-- [ ] Model SQLAlchemy para `business_hours` (day_of_week, open/close, breaks JSONB)
-- [ ] Model SQLAlchemy para `consents` (LGPD)
-- [ ] Migração Alembic gerada e aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `services` (todos os campos: duration, price, buffer, pausa, variável)
+- [ ] ORM mapping no `hairdule-shared` para `staff_services` (N:N)
+- [ ] ORM mapping no `hairdule-shared` para `business_hours` (day_of_week, open/close, breaks JSONB)
+- [ ] ORM mapping no `hairdule-shared` para `consents` (LGPD)
+- [ ] Migração DDL criada no `hairdule-db` (`0003_services_and_hours.py`) e aplicada via `runner.py`
 
 **Backend — barbershop-service (novo repo):**
 - [ ] Repositório `hairdule-barbershop-service` criado
@@ -1013,8 +1171,8 @@ Dados intermediários em localStorage, envio único no passo final.
 - [ ] Fluxo E2E: signup → 5 etapas → dashboard
 
 **Deploy AWS:**
-- [ ] Lambda barbershop-service deployada (Python 3.12 + Layer)
-- [ ] API Gateway routes configuradas
+- [ ] Lambda barbershop-service deployada (Python 3.12 + Layer) (`hairdule-infra-api`)
+- [ ] API Gateway routes configuradas (`hairdule-infra-api`)
 - [ ] Teste em staging
 
 ---
@@ -1084,7 +1242,7 @@ Services: listagem, modal com campos especiais (pausa, variável), drag-and-drop
 - [ ] can_add_staff() bloqueia no limite
 
 **Deploy AWS:**
-- [ ] Lambdas staff-service e services-service deployadas (Python 3.12 + Layer)
+- [ ] Lambdas staff-service e services-service deployadas (Python 3.12 + Layer) (`hairdule-infra-api`)
 - [ ] Teste em staging
 
 ---
@@ -1095,9 +1253,9 @@ Services: listagem, modal com campos especiais (pausa, variável), drag-and-drop
 > **Estimativa:** 4-5 dias  
 > **Depende de:** Fase 3
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
-Tabelas: `staff_hours`, `availability_blocks`, `time_off` (legada)
+Tabelas: `staff_hours`, `availability_blocks`, `time_off` (legada). FK → `domain_block_types`
 
 ### Backend — `hairdule-availability-service`
 
@@ -1121,9 +1279,9 @@ Bloqueios one_time armazenados em UTC, convertidos para America/Sao_Paulo via `z
 
 ### ✅ Checklist — Fase 4
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `staff_hours`, `availability_blocks`, `time_off`
-- [ ] Migração Alembic gerada e aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `staff_hours`, `availability_blocks` (FK → `domain_block_types.id`), `time_off`
+- [ ] Migração DDL criada no `hairdule-db` (`0004_availability_blocks.py`) e aplicada via `runner.py`
 
 **Backend — availability-service (novo repo):**
 - [ ] Repositório `hairdule-availability-service` criado
@@ -1155,7 +1313,7 @@ Bloqueios one_time armazenados em UTC, convertidos para America/Sao_Paulo via `z
 - [ ] slot_interval_min customizado → correto
 
 **Deploy AWS:**
-- [ ] Lambda availability-service deployada (Python 3.12 + Layer)
+- [ ] Lambda availability-service deployada (Python 3.12 + Layer) (`hairdule-infra-api`)
 - [ ] Teste de slots em staging
 
 ---
@@ -1166,10 +1324,10 @@ Bloqueios one_time armazenados em UTC, convertidos para America/Sao_Paulo via `z
 > **Estimativa:** 5-7 dias  
 > **Depende de:** Fase 4
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
 Tabelas: `appointments` (completa), `appointment_audit_log`, `customers`
-ENUM: `appointment_status` (AGENDADO, CONFIRMADO, EM_ATENDIMENTO, FINALIZADO, CANCELADO_CLIENTE, CANCELADO_BARBEARIA, NAO_COMPARECEU, REMARCADO)
+Domain table utilizada: `domain_appointment_statuses` (FK em `appointments.status_id`) — substitui ENUM nativo
 Trigger: `generate_booking_code()` → BKG-YYYYMMDD-NNNN
 View: `appointments_safe` (máscara PII)
 
@@ -1209,12 +1367,12 @@ Timeline diária por profissional, modal de criação (profissional → serviço
 
 ### ✅ Checklist — Fase 5
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `appointments`, `appointment_audit_log`, `customers`
-- [ ] ENUM `appointment_status`
-- [ ] Trigger `generate_booking_code()` (via Alembic migration com raw SQL)
-- [ ] View `appointments_safe` (máscara PII)
-- [ ] Migração Alembic gerada e aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `appointments` (FK → `domain_appointment_statuses.id`), `appointment_audit_log`, `customers`
+- [ ] FK `appointments.status_id` → `domain_appointment_statuses.id` (substitui ENUM nativo)
+- [ ] Trigger `generate_booking_code()` (via migração DDL no `hairdule-db` com raw SQL)
+- [ ] View `appointments_safe` (máscara PII) criada no `hairdule-db`
+- [ ] Migração DDL criada no `hairdule-db` (`0005_appointments_and_audit.py`) e aplicada via `runner.py`
 - [ ] Seed com agendamentos de exemplo
 
 **Backend — appointments-service (novo repo):**
@@ -1259,8 +1417,8 @@ Timeline diária por profissional, modal de criação (profissional → serviço
 - [ ] Upsert customer (novo + existente)
 
 **Deploy AWS:**
-- [ ] Lambda appointments-service deployada (Python 3.12 + Layer)
-- [ ] API Gateway routes configuradas
+- [ ] Lambda appointments-service deployada (Python 3.12 + Layer) (`hairdule-infra-api`)
+- [ ] API Gateway routes configuradas (`hairdule-infra-api`)
 - [ ] Teste em staging
 
 ---
@@ -1271,7 +1429,7 @@ Timeline diária por profissional, modal de criação (profissional → serviço
 > **Estimativa:** 5-7 dias  
 > **Depende de:** Fase 5
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
 Tabela: `customer_consents` (barbershop_id, phone, policy_version, accepted_at)
 Views: `staff_public` (sem PII), `plans_public`
@@ -1297,10 +1455,10 @@ Design: mobile-first, SSR para SEO, minimal bundle.
 
 ### ✅ Checklist — Fase 6
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `customer_consents`
-- [ ] View `staff_public` e `plans_public`
-- [ ] Migração Alembic aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `customer_consents`
+- [ ] Views `staff_public` e `plans_public` criadas no `hairdule-db` (migração DDL)
+- [ ] Migração aplicada via `runner.py`
 
 **Backend — rotas públicas:**
 - [ ] POST `/public/booking` — agendamento do cliente
@@ -1339,8 +1497,8 @@ Design: mobile-first, SSR para SEO, minimal bundle.
 - [ ] E2E: fluxo completo no portal → aparece no dashboard
 
 **Deploy AWS:**
-- [ ] Rotas públicas no API Gateway
-- [ ] S3 + CloudFront para Portal
+- [ ] Rotas públicas no API Gateway (`hairdule-infra-api`)
+- [ ] S3 + CloudFront para Portal (`hairdule-infra-storage`)
 - [ ] Teste em staging
 
 ---
@@ -1351,10 +1509,10 @@ Design: mobile-first, SSR para SEO, minimal bundle.
 > **Estimativa:** 4-5 dias  
 > **Depende de:** Fase 2 (paralelo com 3-6)
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
 Tabelas: `plans`, `subscriptions`
-ENUMs: `subscription_status`, `billing_cycle`
+Domain tables utilizadas: `domain_subscription_statuses`, `domain_billing_cycles` (FK em `subscriptions.status_id` e `subscriptions.billing_cycle_id`) — substituem ENUMs nativos
 Seed: individual (1 staff, R$59,90/mês), pequeno (3, R$99,90), medio (6, R$149,90), grande (10, R$199,90)
 
 ### Backend — `hairdule-subscriptions-service`
@@ -1377,11 +1535,11 @@ stripe trigger invoice.payment_failed
 
 ### ✅ Checklist — Fase 7
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `plans` e `subscriptions`
-- [ ] ENUMs subscription_status e billing_cycle
-- [ ] Seed com 4 planos padrão
-- [ ] Migração Alembic aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `plans` e `subscriptions` (FK → `domain_subscription_statuses.id`, `domain_billing_cycles.id`)
+- [ ] FK substitui ENUMs nativos por domain tables
+- [ ] Seed com 4 planos padrão no `hairdule-db`
+- [ ] Migração DDL criada no `hairdule-db` (`0006_subscriptions_and_plans.py`) e aplicada via `runner.py`
 
 **Backend — subscriptions-service (novo repo):**
 - [ ] Repositório `hairdule-subscriptions-service` criado
@@ -1411,9 +1569,9 @@ stripe trigger invoice.payment_failed
 - [ ] Stripe CLI forwarding funcionando
 
 **Deploy AWS:**
-- [ ] Lambda subscriptions-service deployada (Python 3.12 + Layer)
+- [ ] Lambda subscriptions-service deployada (Python 3.12 + Layer) (`hairdule-infra-api`)
 - [ ] Webhook Stripe configurado para URL de produção
-- [ ] Chaves Stripe live em produção
+- [ ] Chaves Stripe live em produção (`hairdule-infra-auth` → Secrets Manager)
 
 ---
 
@@ -1423,9 +1581,9 @@ stripe trigger invoice.payment_failed
 > **Estimativa:** 3-4 dias  
 > **Depende de:** Fase 5
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
-Tabelas: `notifications`, `notification_preferences`, `push_subscriptions`
+Tabelas: `notifications`, `notification_preferences`, `push_subscriptions`. FK → `domain_notification_types`
 
 ### Backend — `hairdule-notifications-service`
 
@@ -1435,9 +1593,9 @@ WebPush VAPID: push para staff responsável + owner do estabelecimento (via `pyw
 
 ### ✅ Checklist — Fase 8
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `notifications`, `notification_preferences`, `push_subscriptions`
-- [ ] Migração Alembic aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `notifications` (FK → `domain_notification_types.id`), `notification_preferences`, `push_subscriptions`
+- [ ] Migração DDL criada no `hairdule-db` (`0007_notifications.py`) e aplicada via `runner.py`
 
 **Backend — notifications-service (novo repo):**
 - [ ] Repositório `hairdule-notifications-service` criado
@@ -1462,8 +1620,8 @@ WebPush VAPID: push para staff responsável + owner do estabelecimento (via `pyw
 - [ ] Badge atualiza
 
 **Deploy AWS:**
-- [ ] Lambda notifications-service deployada (Python 3.12 + Layer)
-- [ ] VAPID keys no Secrets Manager
+- [ ] Lambda notifications-service deployada (Python 3.12 + Layer) (`hairdule-infra-api`)
+- [ ] VAPID keys no Secrets Manager (`hairdule-infra-auth`)
 
 ---
 
@@ -1473,7 +1631,7 @@ WebPush VAPID: push para staff responsável + owner do estabelecimento (via `pyw
 > **Estimativa:** 4-5 dias  
 > **Depende de:** Fase 5
 
-### Banco de Dados
+### Banco de Dados (via `hairdule-db`)
 
 Tabelas: `suggestion_tracking`, `admin_activity_log`
 
@@ -1485,9 +1643,9 @@ Smart Booking Suggestion: histórico do cliente → disponibilidade → score �
 
 ### ✅ Checklist — Fase 9
 
-**Banco de Dados:**
-- [ ] Model SQLAlchemy para `suggestion_tracking` e `admin_activity_log`
-- [ ] Migração Alembic aplicada
+**Banco de Dados (`hairdule-db` DDL + `hairdule-shared` ORM):**
+- [ ] ORM mapping no `hairdule-shared` para `suggestion_tracking` e `admin_activity_log`
+- [ ] Migração DDL criada no `hairdule-db` (`0008_analytics.py`) e aplicada via `runner.py`
 
 **Backend — analytics-service (novo repo):**
 - [ ] Repositório `hairdule-analytics-service` criado
@@ -1513,7 +1671,7 @@ Smart Booking Suggestion: histórico do cliente → disponibilidade → score �
 - [ ] Gráficos renderizando
 
 **Deploy AWS:**
-- [ ] Lambda analytics-service deployada (Python 3.12 + Layer)
+- [ ] Lambda analytics-service deployada (Python 3.12 + Layer) (`hairdule-infra-api`)
 
 ---
 

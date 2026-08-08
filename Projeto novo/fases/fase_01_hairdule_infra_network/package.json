@@ -1,0 +1,19 @@
+{
+  "name": "fase_01_hairdule_infra_network",
+  "version": "1.0.0",
+  "description": "Hairdule 2.0 - Phase 01: AWS Network Infrastructure (VPC, Subnets, Gateways)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sst dev",
+    "deploy": "sst deploy",
+    "remove": "sst remove"
+  },
+  "dependencies": {
+    "sst": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,37 @@
+name: 3. CD - Deploy Produção (AWS Prod)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write  # Obrigatório para autenticação segura via OIDC (Sem Chaves)
+  contents: read
+
+jobs:
+  deploy-production:
+    name: Deploy na AWS Produção
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Autenticar na AWS via OIDC (Sem Chaves/Senhas - Produção)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_PROD }}
+          aws-region: us-east-1
+
+      - name: Executar Deploy SST v4 na AWS Produção
+        run: npx sst deploy --stage production

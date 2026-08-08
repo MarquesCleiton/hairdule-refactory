@@ -1,0 +1,76 @@
+name: 2. CD - Deploy Homologação (release-v*) & Abrir PR para Main
+
+on:
+  push:
+    branches:
+      - 'release-v*'
+
+permissions:
+  id-token: write  # Obrigatório para autenticação segura via OIDC (Sem Chaves)
+  contents: write
+  pull-requests: write
+
+jobs:
+  deploy-staging-and-pr-prod:
+    name: Deploy na AWS Homologação & Criar PR para Main
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Autenticar na AWS via OIDC (Sem Chaves/Senhas - Homologação)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+          aws-region: us-east-1
+
+      - name: Executar Deploy SST v4 na AWS Homologação
+        run: npx sst deploy --stage staging
+
+      - name: Extrair Tag da Versão
+        id: get_tag
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          TAG_NAME=$(echo "$BRANCH_NAME" | sed 's/release-//')
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "Tag extraída: $TAG_NAME"
+
+      - name: Criar Tag Git de Versão Oficial
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${process.env.TAG_NAME}`,
+              sha: context.sha
+            })
+
+      - name: Abrir PR Automático da Branch release-v* para Main (Produção)
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main-promotion-${{ env.TAG_NAME }}
+          commit-message: "cd: deploy em homologação concluído para ${{ env.TAG_NAME }}"
+          title: "PR Automático de Produção: ${{ github.ref_name }} -> main (${{ env.TAG_NAME }})"
+          body: |
+            ## 🚀 Pull Request Automático de Promoção para Produção
+            
+            - **Branch de Release:** `${{ github.ref_name }}`
+            - **Tag de Versão Oficial:** `${{ env.TAG_NAME }}`
+            - **Status Homologação:** ✅ Deploy e testes na AWS Homologação concluídos com sucesso.
+            
+            ⚠️ **ATENÇÃO:** O merge para `main` disparará o deploy na **Conta AWS de Produção**.
+          base: main
