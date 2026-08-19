@@ -1,16 +1,17 @@
-# 🔔 Fase 25 — Dashboard Notifications (Angular) (`fase_25_hairdule_app_dashboard_notifications`)
+# 🔔 Fase 25 — UI Central de Notificações (Angular 19) (`fase_08_hairdule_ui_web`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_25_hairdule_app_dashboard_notifications`
-> **Tecnologia:** Angular 18 + Angular Material + Web Push API | Porta local: `4300`
-> **Dependências Diretas:** Fase 24 (notifications-service em `localhost:3008`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/notifications/`)  
+> **Tecnologia:** Angular 19 + Web Push API + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 24 (notification-service em `localhost:3008`)  
+> **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 25 implementa a **central de notificações in-app** no dashboard e a **inscrição de push notifications** no navegador. É o "sino de alarme" do sistema: badge com contagem de não-lidas na navbar e notificações que chegam no celular mesmo com o navegador fechado.
+A Fase 25 implementa a **central de notificações in-app** no Web Dashboard SPA e a **inscrição de push notifications (Web Push VAPID)** no navegador.
 
 ---
 

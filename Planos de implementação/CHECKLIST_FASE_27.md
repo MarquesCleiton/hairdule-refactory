@@ -1,16 +1,17 @@
-# 📊 Fase 27 — Dashboard Analytics (Angular) (`fase_27_hairdule_app_dashboard_analytics`)
+# 📊 Fase 27 — Dashboard Analytics (Angular 19) (`fase_27_hairdule_ui_analytics`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_27_hairdule_app_dashboard_analytics`
-> **Tecnologia:** Angular 18 + Angular Material + Chart.js / ngx-charts | Porta local: `4300`
-> **Dependências Diretas:** Fase 26 (analytics-service em `localhost:3009`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_27_hairdule_ui_analytics` (Repositório Apartado)  
+> **Tecnologia:** Angular 19 + Chart.js / ngx-charts + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 26 (analytics-service em `localhost:3009`)  
+> **Regra de Isolamento:** Conforme decisão arquitetural, este repositório é mantido **apartado** dos demais módulos para isolamento de bibliotecas pesadas de gráficos, processamento intensivo de dados e visualizações de IA/Heatmap.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 27 é a **última fase do Bloco 2** e entrega o **dashboard de métricas e analytics** — a visão executiva do negócio. É onde o dono acompanha faturamento, identifica tendências e age sobre as sugestões da IA.
+A Fase 27 é a **última fase do Bloco 2** e entrega o **dashboard de métricas e analytics avançado** — a visão executiva do negócio com gráficos de faturamento, heatmap de horários de pico, ranking de serviços e cards de sugestão inteligente de IA.
 
 É como ter um **painel de controle em tempo real** da barbearia: gráficos de faturamento, heatmap de horários de pico, ranking de serviços e cards de sugestão inteligente.
 

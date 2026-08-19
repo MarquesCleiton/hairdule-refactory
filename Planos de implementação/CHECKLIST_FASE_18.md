@@ -1,16 +1,17 @@
-# 🗓️ Fase 18 — Dashboard Availability (Angular) (`fase_18_hairdule_app_dashboard_availability`)
+# 📅 Fase 18 — UI Calendário Interativo & Agendamentos (Angular 19) (`fase_08_hairdule_ui_web`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_18_hairdule_app_dashboard_availability`
-> **Tecnologia:** Angular 18 + Angular Material | Porta local: `4300`
-> **Dependências Diretas:** Fase 17 (availability-service em `localhost:3005`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/calendar/`)  
+> **Tecnologia:** Angular 19 + Reactive Forms + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 17 (appointment-service em `localhost:3006`)  
+> **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 18 implementa a **configuração visual de horários e bloqueios** no dashboard. É onde o dono define quando a barbearia abre, quando cada barbeiro trabalha, e quando alguém está de férias.
+A Fase 18 implementa o **Calendário Interativo de Agendamentos (Grade Diária/Semanal)** no Web Dashboard SPA: visualização de horários por profissional, criação manual de agendamentos pelo balcão, cancelamento e remarcação.
 
 ---
 

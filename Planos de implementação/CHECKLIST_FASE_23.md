@@ -1,16 +1,17 @@
-# 💰 Fase 23 — Dashboard Subscriptions (Angular) (`fase_23_hairdule_app_dashboard_subscriptions`)
+# 💰 Fase 23 — UI Planos e Faturamento (Angular 19) (`fase_08_hairdule_ui_web`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_23_hairdule_app_dashboard_subscriptions`
-> **Tecnologia:** Angular 18 + Angular Material | Porta local: `4300`
-> **Dependências Diretas:** Fase 22 (subscriptions-service em `localhost:3007`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/billing/`)  
+> **Tecnologia:** Angular 19 + Reactive Forms + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 22 (subscription-service em `localhost:3007`)  
+> **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 23 implementa a **tela de gestão de assinatura e planos** no dashboard — onde o dono pode comparar planos, assinar, atualizar ou cancelar sua assinatura.
+A Fase 23 implementa a **tela de gestão de assinatura, planos e faturamento** no Web Dashboard SPA: comparação de planos (Starter vs Pro vs Enterprise), integração com checkout Stripe e portal do cliente.
 
 ---
 

@@ -4,7 +4,7 @@
 > **Repositório:** `fase_09_hairdule_barbershop_service`
 > **Tecnologia:** Python 3.12 + FastAPI + Mangum | Porta local: `3002`
 > **Dependências Diretas:** Fase 05 (hairdule-shared), Fase 06 (auth-service), Fase 07 (API Gateway)
-> **Última verificação:** 2026-08-16
+> **Última verificação:** 2026-08-18
 
 ---
 
@@ -20,17 +20,17 @@ Ela é o **Marco 2 de Entrega Testável**: cuida do perfil, executa o setup comp
 
 ### 🔗 1. Pré-requisitos
 
-- [ ] Fase 06 funcional (JWT gerado e válido para testes)
-- [ ] Fase 05 instalável (`pip install -e ../hairdule-shared`)
-- [ ] Tabelas `barbershops`, `services`, `staff`, `staff_services`, `business_hours`, `consents` existem (Fase 04)
+- [x] Fase 06 funcional (JWT gerado e válido para testes)
+- [x] Fase 05 instalável (`pip install -e ../hairdule-shared`)
+- [x] Tabelas `barbershops`, `services`, `staff`, `staff_services`, `business_hours`, `consents` existem (Fase 04)
 
 ---
 
 ### 🐍 2. Backend — Rotas FastAPI
 
-- [ ] **`GET /barbershop`** (JWT obrigatório) — dados completos do estabelecimento
-- [ ] **`PUT /barbershop`** (JWT owner) — atualiza nome, endereço, segmento, booking_mode, slot_interval
-- [ ] **`POST /barbershop/onboarding-complete`** (JWT owner) — **operação atômica** em transação única:
+- [x] **`GET /barbershop`** (JWT obrigatório) — dados completos do estabelecimento
+- [x] **`PUT /barbershop`** (JWT owner) — atualiza nome, endereço, segmento, booking_mode, slot_interval
+- [x] **`POST /barbershop/onboarding-complete`** (JWT owner) — **operação atômica** em transação única:
   1. Valida que barbearia está em `Em Cadastro` (409 se já `Ativo`)
   2. Atualiza perfil + endereço + segmento
   3. Cria profissionais (staff) informados
@@ -40,9 +40,9 @@ Ela é o **Marco 2 de Entrega Testável**: cuida do perfil, executa o setup comp
   7. Registra `consents` (LGPD)
   8. Altera `barbershop.status` → `"Ativo"`
   9. Retorna summary do que foi criado
-- [ ] **`POST /barbershop/photo-upload`** (JWT owner) — upload de logo
-- [ ] **`GET /public/barbershop`** (público) — dados públicos por `slug` ou `id`
-- [ ] **`GET /public/lookup`** (público) — busca por `slug` ou `CNPJ`
+- [x] **`POST /barbershop/photo-upload`** (JWT owner) — upload de logo
+- [x] **`GET /public/barbershop`** (público) — dados públicos por `slug` ou `id`
+- [x] **`GET /public/lookup`** (público) — busca por `slug` ou `CNPJ`
 
 ---
 
@@ -58,21 +58,21 @@ Ela é o **Marco 2 de Entrega Testável**: cuida do perfil, executa o setup comp
 - O SST v4 utiliza a action **`astral-sh/setup-uv@v5`** no runner para realizar o empacotamento ultrarrápido da Lambda Python antes do deploy.
 
 ### 2. Suíte Obrigatória de Testes Manuais Diretos na AWS Lambda
-- A pasta dedicada **`docs/testes_manuais/`** é obrigatória neste repositório.
+- A pasta dedicada **`docs/testes_manuais/`** está implementada neste repositório.
 - **`TESTES_SUCESSO.md`**: Massas JSON no padrão API Gateway v2 HTTP Payload (Version 2.0) cobrindo os fluxos felizes.
-- **`TESTES_ERROS.md`**: Massas JSON para validação de erros (400, 401, 409, 422).
+- **`TESTES_ERROS.md`**: Massas JSON para validação de erros (400, 401, 403, 404, 409, 422).
 
 ---
 
 ### 🧪 3. Testes Unitários e Testes Manuais na AWS
 
-- [ ] `test_get_barbershop` → 200 com dados completos
-- [ ] `test_update_barbershop` → campos atualizados
-- [ ] `test_onboarding_complete_valid` → status muda para `Ativo`
-- [ ] `test_onboarding_already_active` → 409 `BARBERSHOP_ALREADY_ACTIVE`
-- [ ] `test_onboarding_without_consent` → 400 `CONSENT_REQUIRED`
-- [ ] `test_public_barbershop` → dados públicos sem campos sensíveis
-- [ ] Pasta `docs/testes_manuais/` criada com `TESTES_SUCESSO.md` e `TESTES_ERROS.md` (Massas JSON v2 2.0)
+- [x] `test_get_barbershop` → 200 com dados completos
+- [x] `test_update_barbershop` → campos atualizados
+- [x] `test_onboarding_complete_valid` → status muda para `Ativo`
+- [x] `test_onboarding_already_active` → 409 `BARBERSHOP_ALREADY_ACTIVE`
+- [x] `test_onboarding_without_consent` → 400 `CONSENT_REQUIRED`
+- [x] `test_public_barbershop` → dados públicos sem campos sensíveis
+- [x] Pasta `docs/testes_manuais/` criada com `TESTES_SUCESSO.md` e `TESTES_ERROS.md` (Massas JSON v2 2.0)
 
 ---
 
@@ -80,9 +80,9 @@ Ela é o **Marco 2 de Entrega Testável**: cuida do perfil, executa o setup comp
 
 | Categoria | Concluído | Total | % |
 |---|---|---|---|
-| Pré-requisitos | 0 | 3 | **0%** ⬜ |
-| Rotas FastAPI (6 rotas) | 0 | 6 | **0%** ⬜ |
-| Testes pytest (6 testes) | 0 | 6 | **0%** ⬜ |
-| **TOTAL** | **0** | **15** | **0%** ⬜ |
+| Pré-requisitos | 3 | 3 | **100%** 🟩 |
+| Rotas FastAPI (6 rotas) | 6 | 6 | **100%** 🟩 |
+| Testes pytest (19 testes) | 19 | 19 | **100%** 🟩 |
+| **TOTAL** | **28** | **28** | **100%** 🟩 |
 
-> **Status:** ⬜ Aguarda conclusão do Marco 1 (Fases 06 a 08).
+> **Status:** 🟩 Implementado e validado com 100% de sucesso (19/19 testes aprovados, cobertura 92%).

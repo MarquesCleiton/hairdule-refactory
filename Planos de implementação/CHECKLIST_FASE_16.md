@@ -1,16 +1,17 @@
-# 🗃️ Fase 16 — Dashboard Services (Angular) (`fase_16_hairdule_app_dashboard_services`)
+# ⏰ Fase 16 — UI Configuração de Horários e Bloqueios (Angular 19) (`fase_08_hairdule_ui_web`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_16_hairdule_app_dashboard_services`
-> **Tecnologia:** Angular 18 + Angular Material | Porta local: `4300`
-> **Dependências Diretas:** Fase 15 (services-service em `localhost:3004`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/availability/`)  
+> **Tecnologia:** Angular 19 + Reactive Forms + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 15 (availability-engine em `localhost:3005`)  
+> **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 16 implementa a **tela de catálogo de serviços** do dashboard — onde o dono cria, edita e reordena os cortes e tratamentos que a barbearia oferece.
+A Fase 16 implementa o módulo de **Configuração de Horários de Funcionamento, Escalas de Profissionais e Bloqueios de Agenda** no Web Dashboard SPA.
 
 O destaque técnico é o **drag-and-drop de reordenação** e a **máscara de preço** em reais que converte para centavos antes de enviar para a API.
 

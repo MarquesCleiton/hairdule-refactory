@@ -1,16 +1,17 @@
-# 👤 Fase 14 — Dashboard Staff (Angular) (`fase_14_hairdule_app_dashboard_staff`)
+# ✂️ Fase 14 — UI Catálogo de Serviços & Preços (Angular 19) (`fase_08_hairdule_ui_web`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_14_hairdule_app_dashboard_staff`
-> **Tecnologia:** Angular 18 + Angular Material | Porta local: `4300`
-> **Dependências Diretas:** Fase 13 (staff-service em `localhost:3003`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/services/`)  
+> **Tecnologia:** Angular 19 + Reactive Forms + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 13 (service-service em `localhost:3004`)  
+> **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 14 implementa a **tela de gestão de profissionais** — onde o dono adiciona, edita e remove os colaboradores da barbearia, com controle visual de permissões baseado no papel do usuário logado.
+A Fase 14 implementa o módulo de **Catálogo de Serviços & Preços** no Web Dashboard SPA: cadastro de serviços, categorias, duração em minutos, preços em centavos e reordenação drag-and-drop.
 
 ---
 

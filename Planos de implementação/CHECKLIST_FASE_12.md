@@ -1,16 +1,17 @@
-# 🏗️ Fase 12 — Dashboard Onboarding (Angular) (`fase_12_hairdule_app_dashboard_onboarding`)
+# 👥 Fase 12 — UI Gestão de Profissionais / Staff (Angular 19) (`fase_08_hairdule_ui_web`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_12_hairdule_app_dashboard_onboarding`
-> **Tecnologia:** Angular 18 + Angular Material | Porta local: `4300`
-> **Dependências Diretas:** Fase 11 (barbershop-service em `localhost:3002`)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/staff/`)  
+> **Tecnologia:** Angular 19 + Reactive Forms + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 11 (staff-service em `localhost:3003`)  
+> **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
+> **Última verificação:** 2026-08-18
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 12 implementa o **wizard de onboarding de 5 etapas** — a jornada que transforma um usuário recém-cadastrado em um estabelecimento totalmente configurado e pronto para atender clientes.
+A Fase 12 implementa o módulo de **Gestão da Equipe / Profissionais (Staff)** no Web Dashboard SPA: listagem de barbeiros/profissionais, convite de novos colaboradores, definição de permissões (Dono vs Colaborador) e foto de perfil.
 
 É o "assistente de configuração inicial" da barbearia. Como configurar um celular novo: você passa por telas guiadas, define seus dados básicos, e no final está tudo pronto para usar.
 
