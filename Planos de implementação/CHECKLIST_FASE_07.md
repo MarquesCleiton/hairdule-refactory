@@ -36,17 +36,18 @@ A Fase 07 é a **porta de entrada unificada para o backend do Hairdule 2.0**. Re
                        ┌────────────────┴────────────────┐
                        ▼                                 ▼
                Rotas Públicas                    Rotas Protegidas
-           POST /auth/signup                  (Fases Futuras 09+)
-           POST /auth/login                   GET /barbershops/*
-           POST /auth/refresh                 GET /staff/*
-           POST /auth/forgot-password         GET /appointments/*
-           POST /auth/reset-password          (Exigem Bearer JWT)
-           POST /auth/change-password
-                       │
-                       ▼
-         [ ⚡ AWS Lambda (Auth Service - Fase 06 v0.2.2) ]
-               ├── JOIN Único (UserRole + Barbershop) no PostgreSQL
-               └── Bcrypt Rounds=10 (OWASP otimizado: 250ms CPU)
+            POST /auth/signup                  (Fases Futuras 09+)
+            POST /auth/login                   GET /auth/me
+            POST /auth/refresh                 POST /auth/logout
+            POST /auth/forgot-password         GET /barbershop
+            POST /auth/reset-password          PUT /barbershop
+            POST /auth/change-password         POST /barbershop/onboarding-complete
+                        │                      (Exigem Cookie HttpOnly ou Bearer JWT)
+                        ▼
+          [ ⚡ AWS Lambda (Auth Service - Fase 06) ]
+                ├── Emissão de Cookies HttpOnly (Set-Cookie)
+                ├── JOIN Único (UserRole + Barbershop) no PostgreSQL
+                └── Bcrypt Rounds=10 (OWASP otimizado: 250ms CPU)
 ```
 
 ---
@@ -58,7 +59,8 @@ A Fase 07 é a **porta de entrada unificada para o backend do Hairdule 2.0**. Re
 - [x] **`aws.apigatewayv2.Api`** — `hairdule-api-staging` (ID: `nlrx258a8i`):
   - Protocol: `HTTP`
   - URL Endpoint: `https://nlrx258a8i.execute-api.us-east-1.amazonaws.com`
-  - CORS global ativo com interceptação de pre-flight `OPTIONS` respondendo `204 No Content` no edge
+  - CORS global ativo com `allowCredentials: true` e origens explícitas autorizadas (`localhost:4300`, `localhost:4200`, CloudFront `d19dlqxhe17bcr.cloudfront.net`, `staging.hairdule.com.br`)
+  - Interceptação de pre-flight `OPTIONS` respondendo `204 No Content` no edge
   - Access Logs dedicados no CloudWatch (`/aws/apigateway/hairdule-api-staging`)
 - [x] **JWT Authorizer (`aws.apigatewayv2.Authorizer`):**
   - Integração com Cognito User Pool da Fase 03 (`us-east-1_tPfrA7wPP`)
@@ -82,13 +84,15 @@ A Fase 07 é a **porta de entrada unificada para o backend do Hairdule 2.0**. Re
 
 - [x] **Rotas estritamente tipadas do Auth Service:**
   - `GET /health` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** (~18ms AWS)
-  - `POST /auth/signup` -> Lambda Auth Service (Fase 06) — 🟢 **201 Created** (601ms RTT / 252ms Lambda)
-  - `POST /auth/login` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** (601ms RTT / 251ms Lambda)
-  - `POST /auth/refresh` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** (~293ms RTT / 1.5ms Lambda)
+  - `POST /auth/signup` -> Lambda Auth Service (Fase 06) — 🟢 **201 Created** + `Set-Cookie`
+  - `POST /auth/login` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** + `Set-Cookie`
+  - `POST /auth/refresh` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** + `Set-Cookie`
+  - `POST /auth/logout` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** (limpeza de cookies)
+  - `GET /auth/me` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK** (dados de sessão)
   - `POST /auth/forgot-password` -> Lambda Auth Service (Fase 06) — 🟢 **200 OK**
-  - `POST /auth/change-password` -> Lambda Auth Service (Fase 06) — 🟢 **401 Unauthorized** (sem Bearer)
-  - `OPTIONS /auth/login` -> Interceptado no Edge pelo API GW — 🟢 **204 No Content** (154ms RTT / 0ms Lambda)
-  - `GET /rota-inexistente` -> Rejeitado na Borda pelo API GW — 🟢 **404 Not Found** (134ms RTT / 0ms Lambda)
+  - `POST /auth/change-password` -> Lambda Auth Service (Fase 06) — 🟢 **401 Unauthorized** (sem cookie/Bearer)
+  - `OPTIONS /auth/login` -> Interceptado no Edge pelo API GW — 🟢 **204 No Content**
+  - `GET /rota-inexistente` -> Rejeitado na Borda pelo API GW — 🟢 **404 Not Found**
 - [x] Parâmetros SSM exportados:
   - `/sst/hairdule/staging/api/url` -> `https://nlrx258a8i.execute-api.us-east-1.amazonaws.com`
   - `/sst/hairdule/staging/api/id` -> `nlrx258a8i`

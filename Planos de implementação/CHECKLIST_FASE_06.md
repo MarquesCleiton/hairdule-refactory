@@ -68,14 +68,16 @@ Esta fase fornece os endpoints de login, cadastro com transação atômica DB (`
 
 ---
 
-### 🐍 3. Backend — Rotas FastAPI
+### 🐍 3. Backend — Rotas FastAPI & Emissão de Cookies HttpOnly
 
-- [x] **`src/routes/signup.py`** — `POST /auth/signup`: Transação atômica criando `barbershop` (ONBOARDING), `user_role` (OWNER) e `staff` (OWNER) via IAM Auth
-- [x] **`src/routes/login.py`** — `POST /auth/login`: Autentica credenciais e gera JWT Hairdule com claims tipadas
+- [x] **`src/routes/signup.py`** — `POST /auth/signup`: Transação atômica criando `barbershop` (ONBOARDING), `user_role` (OWNER) e `staff` (OWNER) via IAM Auth + emissão de cookies `access_token` e `refresh_token` (`HttpOnly; Secure; SameSite=Lax`)
+- [x] **`src/routes/login.py`** — `POST /auth/login`: Autentica credenciais, gera JWT com claims tipadas e emite cookies `HttpOnly`
 - [x] **`src/routes/forgot_password.py`** — `POST /auth/forgot-password`: Solicitação de código de recuperação por e-mail
 - [x] **`src/routes/reset_password.py`** — `POST /auth/reset-password`: Confirmação de redefinição de senha com código
-- [x] **`src/routes/change_password.py`** — `POST /auth/change-password`: Troca de senha autenticada via Bearer Token
-- [x] **`src/routes/refresh.py`** — `POST /auth/refresh`: Renovação de access token validando refresh token de 30 dias
+- [x] **`src/routes/change_password.py`** — `POST /auth/change-password`: Troca de senha autenticada via Cookie `HttpOnly` ou Bearer Token
+- [x] **`src/routes/refresh.py`** — `POST /auth/refresh`: Renovação de access token lendo cookie `refresh_token` de 30 dias e emitindo novo cookie
+- [x] **`src/routes/logout.py`** — `POST /auth/logout`: Revogação e limpeza dos cookies `access_token` e `refresh_token` (`Max-Age=0`)
+- [x] **`src/routes/me.py`** — `GET /auth/me`: Retorna dados do usuário autenticado e barbearia para hidratação de sessão no frontend
 
 ---
 

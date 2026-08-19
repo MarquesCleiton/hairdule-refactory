@@ -33,11 +33,17 @@ A Fase 20 foi **antecipada para o Marco 1** a fim de prover infraestrutura de ho
 
 ---
 
-### 🌐 2. CloudFront CDN — Web Dashboard SPA
+### 🌐 2. CloudFront CDN — Web Dashboard SPA & Roteamento Unificado de API
 
 - [x] Distribution Dashboard (`https://d19dlqxhe17bcr.cloudfront.net`) com Origin Access Control (OAC)
+- [x] Origem 1 (Padrão): S3 Bucket (`hairdule-ui-web-staging`) para os artefatos SPA Angular
+- [x] Origem 2 (API): API Gateway v2 HTTP API (`nlrx258a8i.execute-api.us-east-1.amazonaws.com`)
+- [x] Behaviors de API (`/auth/*`, `/barbershop/*`, `/public/*`):
+  - Cache desabilitado (`Managed-CachingDisabled`)
+  - Repasse completo de headers e cookies (`Managed-AllViewerExceptHostHeader`)
+  - Métodos HTTP liberados (`GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`)
 - [x] SPA Custom Error Routing (404/403 → `/index.html` 200 OK)
-- [x] Cache Policy `Managed-CachingOptimized` com compressão Gzip e Brotli
+- [x] Cache Policy `Managed-CachingOptimized` para assets estáticos com compressão Gzip e Brotli
 - [x] Viewer Protocol Policy: `redirect-to-https`
 
 ---

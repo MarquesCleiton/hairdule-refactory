@@ -34,8 +34,9 @@ Usuário acessa app.hairdule.com.br (ou localhost:4300)
 └─────────────────────────────────────────────────────────────┘
         │ Sucesso
         ▼
-  JWT armazenado no localStorage
-  AuthInterceptor injeta Bearer em todas as requisições
+  Cookies HttpOnly emitidos pelo servidor (access_token & refresh_token)
+  withCredentials: true ativo no HttpClient via AuthInterceptor
+  Hidratação reativa via GET /auth/me
   AuthGuard protege todas as rotas do dashboard
         │
         ▼
@@ -70,24 +71,25 @@ Usuário acessa app.hairdule.com.br (ou localhost:4300)
 
 ---
 
-### 🧱 3. Core — Infraestrutura de Auth
+### 🧱 3. Core — Infraestrutura de Auth (HttpOnly Cookies & Signals)
 
 - [x] **`core/auth/auth.service.ts`** — `AuthService`:
-  - `login(email, password): Observable<AuthResponse>`
-  - `signup(data): Observable<AuthResponse>`
+  - `login(email, password): Observable<AuthResponse>` — recebe sessão via cookies HttpOnly
+  - `signup(data): Observable<AuthResponse>` — cadastro com emissão de cookies
+  - `initSession(): Observable<CurrentUser | null>` — hidrata estado via `GET /auth/me`
   - `forgotPassword(email): Observable<MessageResponse>`
   - `resetPassword(data): Observable<MessageResponse>`
   - `changePassword(data): Observable<MessageResponse>`
-  - `refreshToken(): Observable<RefreshTokenResponse>`
-  - `logout(): void` — limpa localStorage, redireciona para `/login`
+  - `refreshToken(): Observable<MessageResponse>` — renova cookie `access_token`
+  - `logout(): void` — chama `POST /auth/logout` (limpa cookies) e redireciona para `/login`
   - `isAuthenticated(): boolean` — reativo via Angular Signals
   - `currentUser`, `currentBarbershop` como signals de leitura
 - [x] **`core/auth/auth.guard.ts` & `guest.guard.ts`**:
   - `authGuard` → redireciona para `/login` se não autenticado
   - `guestGuard` → redireciona para `/onboarding` ou `/dashboard` se já autenticado
 - [x] **`core/auth/auth.interceptor.ts`** — `AuthInterceptor`:
-  - Injeta `Authorization: Bearer <token>` em todas as requisições
-  - Se 401 recebido → tenta refresh token transparente → se falhar, faz logout
+  - Configura `withCredentials: true` para transmissão automática dos cookies `HttpOnly`
+  - Se 401 recebido → tenta refresh token transparente via `POST /auth/refresh` → se falhar, faz logout
 - [x] **`core/http/api.service.ts`** — wrapper tipado do `HttpClient` com base URL configurável
 
 ---

@@ -136,7 +136,6 @@ MARCO 5: Fase 20 (CloudFront CDN) ──► Fase 21 (EventBridge Cron) ──►
 | **Suíte de Testes Manuais AWS (Regra)** | Todo microsserviço backend DEVE obrigatoriamente incluir a pasta `docs/testes_manuais/` com os arquivos `TESTES_SUCESSO.md` e `TESTES_ERROS.md` contendo a massa JSON completa (API Gateway v2 2.0) e resultados esperados |
 | **Portas Locais das Lambdas** | auth: 3001 \| barbershop: 3002 \| staff: 3003 \| services: 3004 \| availability: 3005 \| appointments: 3006 \| subscriptions: 3007 \| notifications: 3008 \| analytics: 3009 |
 | **Portas Locais dos Frontends** | Dashboard: 4300 \| Portal: 4200 |
-| **Centralização Frontend Web** | Todo o Dashboard Web SPA fica centralizado no repositório **`fase_08_hairdule_ui_web`** (Fases 08, 10, 12, 14, 16, 18, 23, 25). Repositórios apartados de UI: apenas **`fase_19_hairdule_portal_public`** (Portal Público SSR) e **`fase_27_hairdule_ui_analytics`** (Dashboard Analytics/IA). |
 | **Preços** | Sempre em centavos (int) — nunca float |
 | **Timezone** | `America/Sao_Paulo` (via `zoneinfo.ZoneInfo`) |
 | **Banco** | Zero triggers, Zero views, Zero stored procedures |
@@ -145,3 +144,5 @@ MARCO 5: Fase 20 (CloudFront CDN) ──► Fase 21 (EventBridge Cron) ──►
 | **CI/CD** | 4 workflows por repo: feature, staging, production, hotfix |
 | **Actions** | SHA pinado (40 chars) — proteção supply chain |
 | **Políticas IAM** | [POLITICAS_IAM_LEAST_PRIVILEGE.md](./POLITICAS_IAM_LEAST_PRIVILEGE.md) — 6 políticas modulares de Menor Privilégio |
+| **Autenticação & Segurança Web** | **Cookies `HttpOnly; Secure; SameSite=Lax`** como padrão de segurança para o Web SPA. Dual-Mode com suporte a `Authorization: Bearer <token>` para mobile/CLI/testes. Zero tokens no `localStorage`. |
+| **Roteamento de Borda Unificado** | **AWS CloudFront** como Reverse Proxy unificado (`/*` -> S3 Web SPA; `/auth/*`, `/barbershop/*`, `/public/*` -> API Gateway) garantindo Same-Origin e eliminando problemas de CORS. |
