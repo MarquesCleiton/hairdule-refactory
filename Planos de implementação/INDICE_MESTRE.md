@@ -1,8 +1,8 @@
 # 📋 Hairdule 2.0 — Índice Mestre de Planos de Implementação
 
-> **Projeto:** Hairdule — SaaS de agendamentos para estabelecimentos de beleza
-> **Arquitetura:** AWS Serverless (Lambda + Aurora + CloudFront + Cognito + API Gateway)
-> **Total de Fases:** 27 | **Última atualização:** 2026-08-16 (Reordenado por Fatias Verticais Testáveis E2E)
+> **Projeto:** Hairdule — SaaS de agendamentos para estabelecimentos de beleza  
+> **Arquitetura:** AWS Serverless (Lambda + Aurora + CloudFront + Cognito + API Gateway)  
+> **Total de Fases:** 27 | **Última atualização:** 2026-08-19 (Marco 1 e Marco 2 Concluídos — Iniciando Marco 3)  
 
 ---
 
@@ -12,13 +12,13 @@
 
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
-| **01** | [CHECKLIST_FASE_01.md](./CHECKLIST_FASE_01.md) | SST v4 + VPC | `fase_01_hairdule_infra_network` | ✅ ~90% (Staging Operacional) |
-| **02** | [CHECKLIST_FASE_02.md](./CHECKLIST_FASE_02.md) | SST v4 + SG + KMS | `fase_02_hairdule_infra_security` | ✅ ~95% (Staging Operacional) |
-| **03** | [CHECKLIST_FASE_03.md](./CHECKLIST_FASE_03.md) | SST v4 + Cognito + Secrets | `fase_03_hairdule_infra_auth` | 🔶 ~85% (Código pronto) |
-| **04** | [CHECKLIST_FASE_04.md](./CHECKLIST_FASE_04.md) | Python + Aurora (PG 18.4) + Secrets | `fase_04_hairdule_db` | ✅ ~95% (Código pronto, CI verde) |
-| **04.1** | [CHECKLIST_FASE_04_1.md](./CHECKLIST_FASE_04_1.md) | Python + SST v4 + Lambda VPC | `fase_04_1_hairdule_db_runner` | ✅ ~95% (Código pronto) |
-| **04.2** | [CHECKLIST_FASE_04_2.md](./CHECKLIST_FASE_04_2.md) | SST v4 + EC2 SSM + Auto-Stop | `fase_04_2_hairdule_bastion` | ✅ 100% (Código pronto) |
-| **05** | [CHECKLIST_FASE_05.md](./CHECKLIST_FASE_05.md) | Python Package (Lambda Layer) | `fase_05_hairdule_shared` | ✅ 100% (Código pronto, Layer e CI/CD verdes) |
+| **01** | [CHECKLIST_FASE_01.md](./CHECKLIST_FASE_01.md) | SST v4 + VPC | `fase_01_hairdule_infra_network` | ✅ 100% (Homologado na AWS Staging) |
+| **02** | [CHECKLIST_FASE_02.md](./CHECKLIST_FASE_02.md) | SST v4 + SG + KMS | `fase_02_hairdule_infra_security` | ✅ 100% (Homologado na AWS Staging) |
+| **03** | [CHECKLIST_FASE_03.md](./CHECKLIST_FASE_03.md) | SST v4 + Cognito + Secrets | `fase_03_hairdule_infra_auth` | ✅ 100% (Homologado na AWS Staging) |
+| **04** | [CHECKLIST_FASE_04.md](./CHECKLIST_FASE_04.md) | Python + Aurora (PG 18.4) + Secrets | `fase_04_hairdule_db` | ✅ 100% (Homologado na AWS Staging) |
+| **04.1** | [CHECKLIST_FASE_04_1.md](./CHECKLIST_FASE_04_1.md) | Python + SST v4 + Lambda VPC | `fase_04_1_hairdule_db_runner` | ✅ 100% (Homologado na AWS Staging) |
+| **04.2** | [CHECKLIST_FASE_04_2.md](./CHECKLIST_FASE_04_2.md) | SST v4 + EC2 SSM + Auto-Stop | `fase_04_2_hairdule_bastion` | ✅ 100% (Homologado na AWS Staging) |
+| **05** | [CHECKLIST_FASE_05.md](./CHECKLIST_FASE_05.md) | Python Package (Lambda Layer) | `fase_05_hairdule_shared` | ✅ 100% (Homologado na AWS Staging) |
 
 ---
 
@@ -26,26 +26,27 @@
 
 > Fatias verticais organizadas em Marcos de Entrega E2E (Backend + API GW + Frontend).
 
-### 🌟 MARCO 1 — Autenticação & Identidade E2E (Fases 06-08)
+### 🌟 MARCO 1 — Autenticação & Identidade E2E (Fases 06-08, 20)
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
 | **06** | [CHECKLIST_FASE_06.md](./CHECKLIST_FASE_06.md) | Lambda Python 3.12 — Auth Service (porta 3001) | `fase_06_hairdule_auth_service` | ✅ 100% (Homologado na AWS — IAM Auth) |
 | **07** | [CHECKLIST_FASE_07.md](./CHECKLIST_FASE_07.md) | SST v4 + API Gateway v2 + WAF | `fase_07_hairdule_infra_api` | ✅ 100% (Homologado na AWS — HTTP API) |
 | **08** | [CHECKLIST_FASE_08.md](./CHECKLIST_FASE_08.md) | Angular 19 — Web Dashboard SPA (Auth UI) | `fase_08_hairdule_ui_web` | ✅ 100% (Implantado na AWS — CloudFront CDN) |
+| **20** | [CHECKLIST_FASE_20.md](./CHECKLIST_FASE_20.md) | SST v4 + S3 + CloudFront CDN | `fase_20_hairdule_infra_cdn` | ✅ 100% (Homologado na AWS — CloudFront OAC) |
 
 ### 🌟 MARCO 2 — Onboarding & Barbearia (Fases 09-10)
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
 | **09** | [CHECKLIST_FASE_09.md](./CHECKLIST_FASE_09.md) | Lambda Python 3.12 — Barbershop + Onboarding (3002) | `fase_09_hairdule_barbershop_service` | ✅ 100% (19/19 testes pytest verdes, 92% cobertura) |
-| **10** | [CHECKLIST_FASE_10.md](./CHECKLIST_FASE_10.md) | Angular 19 — Wizard Onboarding 5 Etapas | `fase_08_hairdule_ui_web` (`features/onboarding`) | ⬜ 0% |
+| **10** | [CHECKLIST_FASE_10.md](./CHECKLIST_FASE_10.md) | Angular 19 — Wizard Onboarding 5 Etapas | `fase_08_hairdule_ui_web` (`features/onboarding`) | ✅ 100% (Homologado na AWS Staging) |
 
 ### 🌟 MARCO 3 — Equipe & Catálogo de Serviços (Fases 11-14)
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
-| **11** | [CHECKLIST_FASE_11.md](./CHECKLIST_FASE_11.md) | Lambda Python — Staff CRUD + Permissões (3003) | `fase_11_hairdule_staff_service` | ⬜ 0% |
-| **12** | [CHECKLIST_FASE_12.md](./CHECKLIST_FASE_12.md) | Angular 19 — Gestão de Profissionais | `fase_08_hairdule_ui_web` (`features/staff`) | ⬜ 0% |
-| **13** | [CHECKLIST_FASE_13.md](./CHECKLIST_FASE_13.md) | Lambda Python — Services CRUD + Preços (3004) | `fase_13_hairdule_service_service` | ⬜ 0% |
-| **14** | [CHECKLIST_FASE_14.md](./CHECKLIST_FASE_14.md) | Angular 19 — Catálogo Drag-and-Drop | `fase_08_hairdule_ui_web` (`features/services`) | ⬜ 0% |
+| **11** | [CHECKLIST_FASE_11.md](./CHECKLIST_FASE_11.md) | Lambda Python — Staff CRUD + Permissões (3003) | `fase_11_hairdule_staff_service` | ✅ 100% (32/32 testes pytest verdes, 90% cobertura) |
+| **12** | [CHECKLIST_FASE_12.md](./CHECKLIST_FASE_12.md) | Angular 19 — Gestão de Profissionais | `fase_08_hairdule_ui_web` (`features/staff`) | ✅ 100% (Cards, Modais, Horários e Signals) |
+| **13** | [CHECKLIST_FASE_13.md](./CHECKLIST_FASE_13.md) | Lambda Python — Services CRUD + Preços (3004) | `fase_13_hairdule_service_service` | ✅ 100% (31/31 testes pytest verdes, 92% cobertura) |
+| **14** | [CHECKLIST_FASE_14.md](./CHECKLIST_FASE_14.md) | Angular 19 — Catálogo Drag-and-Drop | `fase_08_hairdule_ui_web` (`features/services`) | ✅ 100% (Drag & Drop CDK, Modais, Máscara R$, Pausas/Buffers) |
 
 ### 🌟 MARCO 4 — Motor de Disponibilidade & Agendamentos (Fases 15-19)
 | Fase | Arquivo | Tecnologia | Repositório | Status |
@@ -77,23 +78,23 @@ Fase 01 (VPC) ──► Fase 02 (Security) ──► Fase 03 (Cognito) ──►
                                                                                             │
  ┌──────────────────────────────────────────────────────────────────────────────────────────┘
  ▼
-MARCO 1: Fase 06 (Auth Service) ──► Fase 07 (API Gateway v2) ──► Fase 08 (Auth UI Angular)
+MARCO 1: Fase 06 (Auth Service) ──► Fase 07 (API Gateway v2) ──► Fase 08 (Auth UI Angular) ──► Fase 20 (CloudFront CDN) ✅
                                                                      │
  ┌───────────────────────────────────────────────────────────────────┘
  ▼
-MARCO 2: Fase 09 (Barbershop Service) ──► Fase 10 (Onboarding UI)
+MARCO 2: Fase 09 (Barbershop Service) ──► Fase 10 (Onboarding UI) ✅
                                                │
  ┌─────────────────────────────────────────────┘
  ▼
-MARCO 3: Fases 11 & 12 (Staff Service + UI) ──► Fases 13 & 14 (Services Service + UI)
+MARCO 3: Fases 11 & 12 (Staff Service + UI) ──► Fases 13 & 14 (Services Service + UI) ✅
                                                     │
  ┌──────────────────────────────────────────────────┘
  ▼
-MARCO 4: Fases 15 & 16 (Availability Engine + UI) ──► Fases 17 & 18 (Appointment Service + UI) ──► Fase 19 (Portal Público SSR)
+MARCO 4: Fases 15 & 16 (Availability Engine + UI) ──► Fases 17 & 18 (Appointment Service + UI) ──► Fase 19 (Portal Público SSR) ⏳
                                                                                                         │
  ┌──────────────────────────────────────────────────────────────────────────────────────────────────────┘
  ▼
-MARCO 5: Fase 20 (CloudFront CDN) ──► Fase 21 (EventBridge Cron) ──► Fases 22-27 (Subscriptions, Notificações, Analytics IA)
+MARCO 5: Fase 21 (EventBridge Cron) ──► Fases 22-27 (Subscriptions, Notificações, Analytics IA)
 ```
 
 ---
@@ -102,28 +103,25 @@ MARCO 5: Fase 20 (CloudFront CDN) ──► Fase 21 (EventBridge Cron) ──►
 
 | Bloco | Total de Itens Estimados | Concluídos | % |
 |---|---|---|---|
-| Fundação (Fases 01-05) | ~200 | ~190 | **~95%** |
-| Marco 1 — Autenticação E2E (Fases 06-08) | ~120 | ~120 | **100%** ✅ |
-| Marco 2 — Onboarding (Fases 09-10) | ~80 | 0 | **0%** |
-| Marco 3 — Staff & Catálogo (Fases 11-14) | ~120 | 0 | **0%** |
-| Marco 4 — Disponibilidade & Agendamentos (Fases 15-19) | ~180 | 0 | **0%** |
-| Marco 5 — CDN, Scheduler & Serviços (Fases 20-27) | ~160 | 0 | **0%** |
-| **TOTAL GERAL** | **~860** | **~310** | **~36%** |
+| Fundação (Fases 01-05) | ~200 | ~200 | **100%** ✅ |
+| Marco 1 — Autenticação E2E (Fases 06-08, 20) | ~120 | ~120 | **100%** ✅ |
+| Marco 2 — Onboarding & Barbearia (Fases 09-10) | ~80 | ~80 | **100%** ✅ |
+| Marco 3 — Staff & Catálogo (Fases 11-14) | ~120 | ~120 | **100%** ✅ |
+| Marco 4 — Disponibilidade & Agendamentos (Fases 15-19) | ~180 | 0 | **0%** ⏳ |
+| Marco 5 — Schedulers & Serviços Complementares (Fases 21-27) | ~160 | 0 | **0%** |
+| **TOTAL GERAL** | **~860** | **~520** | **~60%** |
 
 ---
 
 ## 🚀 Próximos Passos Imediatos (Ordem de Execução)
 
-1. **[x] Fase 01 Staging Operacional** — VPC e Subnets operacionais
-2. **[x] Fase 02 Staging Operacional** — Security Groups, KMS Keys e DB Subnet Group
-3. **[x] Fase 04 Aurora DB pronto** — Schema PostgreSQL 18.4 e Secrets Manager
-4. **[x] Fase 04.1 DB Runner pronto** — DB Runner Lambda VPC com auto-provisionamento de ledger e seeds
-5. **[x] Fase 05 Shared Layer pronto** — Pacote `hairdule-shared` 100% testado e Lambda Layer validada no CI/CD
-6. **[x] Fase 06 Auth Service pronto** — Microsserviço Python de Autenticação deployado na AWS Staging com 100% de cobertura
-7. **[x] Fase 07 API Gateway pronto** — Provisionamento do API Gateway v2 HTTP API + WAF
-8. **[x] Fase 08 Auth UI pronta** — Frontend Angular 19 de Autenticação (Login/Signup/Reset/Change) com 100% de separação HTML/TS/SCSS
-9. **[x] Fase 09 Barbershop Service pronto** — Microsserviço Barbershop & Onboarding (porta 3002) com 19/19 testes e 92% de cobertura
-10. **[ ] Iniciar Fase 10 (`fase_10_hairdule_ui_onboarding`)** — Wizard de Onboarding Angular (5 etapas)
+1. **[x] Marco 1 (Auth E2E & CDN)** — Fases 06, 07, 08 e 20 concluídas e homologadas na AWS Staging
+2. **[x] Marco 2 (Onboarding E2E)** — Fases 09 e 10 concluídas e homologadas na AWS Staging
+3. **[x] Fase 11 Staff Service pronto** — Microsserviço Staff CRUD, Permissões e Horários (porta 3003) com 32/32 testes e 90% de cobertura
+4. **[x] Fase 12 UI Staff pronto** — Gestão de Profissionais no Web Dashboard Angular (`src/app/features/staff`) com 0 erros de build
+5. **[x] Fase 13 Services Service pronto** — Microsserviço Catálogo de Serviços e Preços (porta 3004) com 31/31 testes e 92% de cobertura
+6. **[x] Fase 14 UI Services pronto** — Catálogo de Serviços Drag-and-Drop Angular (`src/app/features/services`) com 0 erros de build
+7. **[ ] Iniciar Fase 15 (`fase_15_hairdule_availability_engine`)** — Motor de Disponibilidade 6 Camadas (porta 3005)
 
 ---
 
@@ -145,4 +143,4 @@ MARCO 5: Fase 20 (CloudFront CDN) ──► Fase 21 (EventBridge Cron) ──►
 | **Actions** | SHA pinado (40 chars) — proteção supply chain |
 | **Políticas IAM** | [POLITICAS_IAM_LEAST_PRIVILEGE.md](./POLITICAS_IAM_LEAST_PRIVILEGE.md) — 6 políticas modulares de Menor Privilégio |
 | **Autenticação & Segurança Web** | **Cookies `HttpOnly; Secure; SameSite=Lax`** como padrão de segurança para o Web SPA. Dual-Mode com suporte a `Authorization: Bearer <token>` para mobile/CLI/testes. Zero tokens no `localStorage`. |
-| **Roteamento de Borda Unificado** | **AWS CloudFront** como Reverse Proxy unificado (`/*` -> S3 Web SPA; `/auth/*`, `/barbershop/*`, `/public/*` -> API Gateway) garantindo Same-Origin e eliminando problemas de CORS. |
+| **Roteamento de Borda Unificado** | **AWS CloudFront** como Reverse Proxy unificado (`/*` -> S3 Web SPA; `/auth/*`, `/barbershop/*`, `/staff/*`, `/services/*`, `/public/*` -> API Gateway) garantindo Same-Origin e eliminando problemas de CORS. |
