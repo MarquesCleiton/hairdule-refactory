@@ -2,7 +2,7 @@
 
 > **Projeto:** Hairdule — SaaS de agendamentos para estabelecimentos de beleza  
 > **Arquitetura:** AWS Serverless (Lambda + Aurora + CloudFront + Cognito + API Gateway)  
-> **Total de Fases:** 27 | **Última atualização:** 2026-08-19 (Marco 1 e Marco 2 Concluídos — Iniciando Marco 3)  
+> **Total de Fases:** 27 | **Última atualização:** 2026-08-25 (Marco 4 Concluído — Marco 5 em Progresso)  
 
 ---
 
@@ -51,23 +51,23 @@
 ### 🌟 MARCO 4 — Motor de Disponibilidade & Agendamentos (Fases 15-19)
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
-| **15** | [CHECKLIST_FASE_15.md](./CHECKLIST_FASE_15.md) | Lambda Python — Motor de Disponibilidade 6 Camadas (3005) | `fase_15_hairdule_availability_engine` | ⬜ 0% |
-| **16** | [CHECKLIST_FASE_16.md](./CHECKLIST_FASE_16.md) | Angular 19 — Configuração de Horários e Bloqueios | `fase_08_hairdule_ui_web` (`features/availability`) | ⬜ 0% |
-| **17** | [CHECKLIST_FASE_17.md](./CHECKLIST_FASE_17.md) | Lambda Python — Agendamentos + Audit (3006) | `fase_17_hairdule_appointment_service` | ⬜ 0% |
-| **18** | [CHECKLIST_FASE_18.md](./CHECKLIST_FASE_18.md) | Angular 19 — Calendário Interativo | `fase_08_hairdule_ui_web` (`features/calendar`) | ⬜ 0% |
-| **19** | [CHECKLIST_FASE_19.md](./CHECKLIST_FASE_19.md) | Angular SSR — Portal Público de Agendamento (porta 4200) | `fase_19_hairdule_portal_public` | ⬜ 0% |
+| **15** | [CHECKLIST_FASE_15.md](./CHECKLIST_FASE_15.md) | Lambda Python — Motor de Disponibilidade 6 Camadas (3005) | `fase_15_hairdule_availability_engine` | ✅ 100% (25/25 testes pytest verdes, homologado na AWS) |
+| **16** | [CHECKLIST_FASE_16.md](./CHECKLIST_FASE_16.md) | Angular 19 — Configuração de Horários e Bloqueios | `fase_08_hairdule_ui_web` (`features/availability`) | ✅ 100% (Componentes standalone, signals, build verde) |
+| **17** | [CHECKLIST_FASE_17.md](./CHECKLIST_FASE_17.md) | Lambda Python — Agendamentos + Audit (3006) | `fase_17_hairdule_appointment_service` | ✅ 100% (20/20 testes pytest verdes, 88% cobertura, homologado na AWS) |
+| **18** | [CHECKLIST_FASE_18.md](./CHECKLIST_FASE_18.md) | Angular 19 — Calendário Interativo | `fase_08_hairdule_ui_web` (`features/calendar`) | ✅ 100% (3 Visões, 11 componentes, Modais, Ações Rápidas) |
+| **19** | [CHECKLIST_FASE_19.md](./CHECKLIST_FASE_19.md) | Angular 19 — Portal Público de Agendamento (porta 4200) | `fase_08_hairdule_ui_web` (`features/client-portal`) | ✅ 100% (Wizard 4 Passos, Voucher Digital, Consulta /check) |
 
-### 🌟 MARCO 5 — CDN, Automações & Serviços Complementares (Fases 20-27)
-| Fase | Arquivo | Tecnologia | Repositório | Status |
-|---|---|---|---|---|
-| **20** | [CHECKLIST_FASE_20.md](./CHECKLIST_FASE_20.md) | SST v4 + S3 + CloudFront CDN | `fase_20_hairdule_infra_cdn` | ✅ 100% (Homologado na AWS — CloudFront OAC) |
-| **21** | [CHECKLIST_FASE_21.md](./CHECKLIST_FASE_21.md) | SST v4 + EventBridge Scheduler | `fase_21_hairdule_infra_scheduler` | ⬜ 0% |
-| **22** | [CHECKLIST_FASE_22.md](./CHECKLIST_FASE_22.md) | Lambda Python — Subscriptions + Stripe (3007) | `fase_22_hairdule_subscription_service` | ⬜ 0% |
-| **23** | [CHECKLIST_FASE_23.md](./CHECKLIST_FASE_23.md) | Angular 19 — Planos e Faturamento | `fase_08_hairdule_ui_web` (`features/billing`) | ⬜ 0% |
-| **24** | [CHECKLIST_FASE_24.md](./CHECKLIST_FASE_24.md) | Lambda Python — Notificações + Web Push VAPID (3008) | `fase_24_hairdule_notification_service` | ⬜ 0% |
-| **25** | [CHECKLIST_FASE_25.md](./CHECKLIST_FASE_25.md) | Angular 19 — Central de Notificações | `fase_08_hairdule_ui_web` (`features/notifications`) | ⬜ 0% |
-| **26** | [CHECKLIST_FASE_26.md](./CHECKLIST_FASE_26.md) | Lambda Python — Analytics + IA (3009) | `fase_26_hairdule_analytics_service` | ⬜ 0% |
-| **27** | [CHECKLIST_FASE_27.md](./CHECKLIST_FASE_27.md) | Angular — Dashboard Analytics + Heatmap | `fase_27_hairdule_ui_analytics` | ⬜ 0% |
+### 🌟 MARCO 5 — Notificações, Analytics, Monetização & Automações (Fases 21-27)
+| Fase | Arquivo | Tecnologia | Repositório | Ordem de Execução | Status |
+|---|---|---|---|---|---|
+| **20** | [CHECKLIST_FASE_20.md](./CHECKLIST_FASE_20.md) | SST v4 + S3 + CloudFront CDN | `fase_20_hairdule_infra_cdn` | — | ✅ 100% (Homologado na AWS — CloudFront OAC) |
+| **24** | [CHECKLIST_FASE_24.md](./CHECKLIST_FASE_24.md) | Lambda Python — Notificações + Web Push VAPID (3008) | `fase_24_hairdule_notification_service` | **1º do Marco 5** | ✅ 100% (27/27 testes pytest verdes, 97% cobertura, VAPID RFC 8292) |
+| **25** | [CHECKLIST_FASE_25.md](./CHECKLIST_FASE_25.md) | Angular 19 — Central de Notificações | `fase_08_hairdule_ui_web` (`features/notifications`) | **2º do Marco 5** | ✅ 100% (Badge Navbar, Signals, Polling 30s, Web Push VAPID, 46/46 testes verdes) |
+| **26** | [CHECKLIST_FASE_26.md](./CHECKLIST_FASE_26.md) | Lambda Python — Analytics + IA (3009) | `fase_26_hairdule_analytics_service` | **3º do Marco 5** | ✅ 100% (20/20 testes pytest verdes, 98% cobertura, IA Heurística, API Gateway) |
+| **27** | [CHECKLIST_FASE_27.md](./CHECKLIST_FASE_27.md) | Angular — Dashboard Analytics + Heatmap | `fase_08_hairdule_ui_web` (`features/analytics`) | **4º do Marco 5** | ✅ 100% (67/67 testes verdes, Gráfico SVG, Heatmap 7x24, Rankings, IA Suggestions) |
+| **21** | [CHECKLIST_FASE_21.md](./CHECKLIST_FASE_21.md) | SST v4 + EventBridge Scheduler & Automações | `fase_21_hairdule_infra_scheduler` | **5º do Marco 5** | ✅ 100% (Lembretes 5min + Analytics Diário 01:00 BRT na AWS Staging) |
+| **22** | [CHECKLIST_FASE_22.md](./CHECKLIST_FASE_22.md) | Lambda Python — Subscriptions + Stripe (3007) | `fase_22_hairdule_subscription_service` | **6º do Marco 5** | ⬜ 0% |
+| **23** | [CHECKLIST_FASE_23.md](./CHECKLIST_FASE_23.md) | Angular 19 — Planos e Faturamento | `fase_08_hairdule_ui_web` (`features/billing`) | **7º do Marco 5** | ⬜ 0% |
 
 ---
 
@@ -90,11 +90,11 @@ MARCO 3: Fases 11 & 12 (Staff Service + UI) ──► Fases 13 & 14 (Services Se
                                                     │
  ┌──────────────────────────────────────────────────┘
  ▼
-MARCO 4: Fases 15 & 16 (Availability Engine + UI) ──► Fases 17 & 18 (Appointment Service + UI) ──► Fase 19 (Portal Público SSR) ⏳
-                                                                                                        │
- ┌──────────────────────────────────────────────────────────────────────────────────────────────────────┘
+MARCO 4: Fase 15 (Availability Engine) ✅ ──► Fase 16 (Availability UI) ✅ ──► Fase 17 (Appointment Service) ✅ ──► Fase 18 (Calendar UI) ✅ ──► Fase 19 (Portal Público) ✅  ← CONCLUÍDO
+                                                                                                         │
+ ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┘
  ▼
-MARCO 5: Fase 21 (EventBridge Cron) ──► Fases 22-27 (Subscriptions, Notificações, Analytics IA)
+MARCO 5: Fase 24 (Notifications Service) ✅ ──► Fase 25 (UI Notificações) ✅ ──► Fase 26 (Analytics Service) ✅ ──► Fase 27 (UI Analytics) ✅ ──► Fase 21 (EventBridge Scheduler) ✅ ──► Fases 22 & 23 (Subscriptions E2E)
 ```
 
 ---
@@ -107,9 +107,9 @@ MARCO 5: Fase 21 (EventBridge Cron) ──► Fases 22-27 (Subscriptions, Notifi
 | Marco 1 — Autenticação E2E (Fases 06-08, 20) | ~120 | ~120 | **100%** ✅ |
 | Marco 2 — Onboarding & Barbearia (Fases 09-10) | ~80 | ~80 | **100%** ✅ |
 | Marco 3 — Staff & Catálogo (Fases 11-14) | ~120 | ~120 | **100%** ✅ |
-| Marco 4 — Disponibilidade & Agendamentos (Fases 15-19) | ~180 | 0 | **0%** ⏳ |
-| Marco 5 — Schedulers & Serviços Complementares (Fases 21-27) | ~160 | 0 | **0%** |
-| **TOTAL GERAL** | **~860** | **~520** | **~60%** |
+| Marco 4 — Disponibilidade & Agendamentos (Fases 15-19) | ~180 | ~180 | **100%** ✅ |
+| Marco 5 — Notificações, Analytics, Subscriptions & Automações (Fases 20-27) | ~160 | ~135 | **~84%** |
+| **TOTAL GERAL** | **~860** | **~835** | **~97%** |
 
 ---
 
@@ -121,7 +121,18 @@ MARCO 5: Fase 21 (EventBridge Cron) ──► Fases 22-27 (Subscriptions, Notifi
 4. **[x] Fase 12 UI Staff pronto** — Gestão de Profissionais no Web Dashboard Angular (`src/app/features/staff`) com 0 erros de build
 5. **[x] Fase 13 Services Service pronto** — Microsserviço Catálogo de Serviços e Preços (porta 3004) com 31/31 testes e 92% de cobertura
 6. **[x] Fase 14 UI Services pronto** — Catálogo de Serviços Drag-and-Drop Angular (`src/app/features/services`) com 0 erros de build
-7. **[ ] Iniciar Fase 15 (`fase_15_hairdule_availability_engine`)** — Motor de Disponibilidade 6 Camadas (porta 3005)
+7. **[x] Fase 15 Availability Engine pronto** — Motor de Disponibilidade 6 Camadas (porta 3005) com 25/25 testes e 90% de cobertura
+8. **[x] Fase 16 UI Availability pronto** — UI de Configuração de Horários, Intervalos e Bloqueios Angular (`src/app/features/availability`) com 0 erros de build
+9. **[x] Fase 17 Appointment Service pronto** — Microsserviço de Agendamentos (porta 3006) com 32/32 testes E2E homologado na AWS Staging
+10. **[x] Fase 18 UI Calendar pronto** — UI de Calendário Interativo Angular com 3 visões (Semana/Dia/Lista), filtros, modais e ações rápidas
+11. **[x] Fase 19 UI Portal Público pronto** — Portal Público de Agendamento do Cliente (Self-Service) com Wizard 4 Passos, Voucher Digital e Consulta `/check`
+12. **[x] Fase 24 Notification Service pronto** — Microsserviço de Notificações In-App e Web Push VAPID (porta 3008) com 27/27 testes e 97% de cobertura
+13. **[x] Fase 25 UI Notifications pronto** — Central de Notificações Angular 19, Badge na Navbar, preferências e suporte a Web Push
+14. **[x] Fase 26 Analytics Service pronto** — Microsserviço de Analytics e Sugestões Inteligentes (porta 3009) com 20/20 testes e deploy na AWS Staging
+15. **[x] Fase 27 UI Analytics pronto** — Dashboard Analítico & BI Angular 19 com KPI cards, gráfico de faturamento, heatmap 7x24, rankings e sugestões de IA
+16. **[x] Fase 21 EventBridge Scheduler pronto** — Agendador automático SST v4 com Lembretes (5min) e Consolidação de Analytics (01:00 BRT) implantado na AWS Staging
+17. **[ ] Marco 5 — Etapa 6: Fase 22 (`fase_22_hairdule_subscription_service`)** — Microsserviço de Subscriptions, Planos Multi-tenant, Stripe Checkout e Webhooks (porta 3007)
+18. **[ ] Marco 5 — Etapa 7: Fase 23 (`fase_08_hairdule_ui_web/features/billing`)** — UI de Planos, Gestão de Assinatura e Faturamento Angular 19
 
 ---
 

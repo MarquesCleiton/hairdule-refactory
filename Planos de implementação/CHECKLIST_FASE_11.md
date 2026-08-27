@@ -1,95 +1,96 @@
-# 🏪 Fase 11 — Barbershop Service Lambda (`fase_11_hairdule_barbershop_service`)
+# 👥 Fase 11 — Staff Service Lambda (`fase_11_hairdule_staff_service`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_11_hairdule_barbershop_service`
-> **Tecnologia:** Python 3.12 + FastAPI + Mangum | Porta local: `3002`
-> **Dependências Diretas:** Fase 05 (hairdule-shared), Fase 06 (API Gateway), Fase 09 (auth funcional)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_11_hairdule_staff_service`  
+> **Organização:** `MarquesCleitonOrg`  
+> **Tecnologia:** Python 3.12 + FastAPI + Mangum + SQLAlchemy + Pydantic v2 | Porta local: `3003`  
+> **Dependências Diretas:** Fase 01 (VPC), Fase 02 (SG/KMS), Fase 03 (Cognito/JWT), Fase 04 (Aurora PostgreSQL), Fase 05 (hairdule-shared), Fase 07 (API Gateway), Fase 09 (Barbershop Service)  
+> **Última atualização:** 2026-08-19 (Marco 3 — 32/32 testes pytest verdes, 90% cobertura)  
+> **Status:** 🟩 **CONCLUÍDO COM SUCESSO**
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 11 implementa o **serviço de gestão do estabelecimento**. Após fazer login (Fase 09), o dono precisa completar o cadastro da barbearia — nome, endereço, tipo de negócio, profissionais iniciais, serviços e horários. Tudo isso é responsabilidade desta Lambda.
+A Fase 11 implementa o **microsserviço de gestão de colaboradores e profissionais (Staff Service)** do Hairdule 2.0. É o departamento de Recursos Humanos do estabelecimento: cuida do cadastro, listagem, atualização de perfis, controle de permissões (Dono vs Barbeiro/Colaborador), horários de trabalho customizados com pausas e vínculo dos serviços que cada profissional executa.
 
-É o **gerente administrativo** da barbearia no sistema: cuida do perfil, configura tudo no onboarding e garante que o status mude de `Em Cadastro` para `Ativo` quando o setup estiver completo.
+Ela abre o **Marco 3 de Entrega Testável E2E** (Equipe & Catálogo de Serviços).
+
+---
+
+## 🔐 Matriz de Permissões & Proteção de Campos Sensíveis
+
+```
+┌──────────────────────────────────────┬─────────────────┬────────────────────┐
+│ Ação / Recurso                       │ OWNER / ADMIN   │ BARBER / RECEPT    │
+├──────────────────────────────────────┼─────────────────┼────────────────────┤
+│ Listar Profissionais (GET /staff)    │ Vê PII de todos │ PII só do próprio  │
+│ Obter Profissional (GET /staff/{id}) │ Acesso total    │ PII só do próprio  │
+│ Criar Profissional (POST /staff)     │ Permite (201)   │ Bloqueado (403)    │
+│ Editar Outro Profissional            │ Permite (200)   │ Bloqueado (403)    │
+│ Editar Próprio Perfil (PUT)          │ Permite (200)   │ Campos básicos ✅  │
+│ Alterar Cargo (role_code)            │ Permite (200)   │ Bloqueado (403/422)│
+│ Alterar Status (is_active)           │ Permite (200)   │ Bloqueado (403/422)│
+│ Alterar Visibilidade da Agenda       │ Permite (200)   │ Bloqueado (403/422)│
+│ Desativar Profissional (DELETE)      │ Permite (200)   │ Bloqueado (403)    │
+│ Gerenciar Horários (GET/PUT hours)   │ Permite (200)   │ Próprio horário ✅ │
+│ Listar Staff Público (GET /public)   │ Sem PII         │ Sem PII            │
+└──────────────────────────────────────┴─────────────────┴────────────────────┘
+```
 
 ---
 
 ## ✅ Checklist Completo da Fase 11
 
 ### 🔗 1. Pré-requisitos
-
-- [ ] Fase 09 funcional (JWT gerado e válido para testes)
-- [ ] Fase 05 instalável (`pip install -e ../hairdule-shared`)
-- [ ] Tabelas `barbershops`, `services`, `staff`, `staff_services`, `business_hours`, `consents` existem (Fase 04)
-
----
-
-### 🐍 2. Backend — Rotas FastAPI
-
-- [ ] **`GET /barbershop`** (JWT obrigatório) — dados completos do estabelecimento
-- [ ] **`PUT /barbershop`** (JWT owner) — atualiza nome, endereço, segmento, booking_mode, slot_interval
-- [ ] **`POST /barbershop/onboarding-complete`** (JWT owner) — **operação atômica** em transação única:
-  1. Valida que barbearia está em `Em Cadastro` (409 se já `Ativo`)
-  2. Atualiza perfil + endereço + segmento
-  3. Cria profissionais (staff) informados
-  4. Cria serviços
-  5. Vincula `staff_services`
-  6. Cria 7 `business_hours` (dom a sáb)
-  7. Registra `consents` (LGPD)
-  8. Altera `barbershop.status` → `"Ativo"`
-  9. Retorna summary do que foi criado
-- [ ] **`POST /barbershop/photo-upload`** (JWT owner) — upload de logo:
-  - Valida tipo (jpeg, png, webp) e tamanho (max 5MB) via `python-magic`
-  - Faz upload para S3 (Fase 07) via `boto3`
-  - Atualiza `barbershop.photo_url` com URL do CloudFront
-- [ ] **`GET /public/barbershop`** (público) — dados públicos por `slug` ou `id`
-- [ ] **`GET /public/lookup`** (público) — busca por `slug` ou `CNPJ`
+- [x] Fase 05 instalável (`hairdule-shared` com ORM `Staff`, `StaffHours`, `StaffService`, `UserRole`)
+- [x] Fase 06 e 09 funcionais (JWT com claims `user_id`, `email`, `barbershop_id`, `role`)
+- [x] Tabelas `staff`, `staff_hours`, `staff_services`, `domain_staff_roles`, `domain_agenda_visibilities` prontas no PostgreSQL (Fase 04)
 
 ---
 
-## 🔑 CI/CD, Autenticação de Código Compartilhado (`GH_PAT`) & Suíte de Testes Manuais
-
-### 1. Checkout de Dependência Compartilhada Privada (`GH_PAT`)
-- Este repositório consome a biblioteca privada [`hairdule_shared`](https://github.com/MarquesCleitonOrg/fase_05_hairdule_shared).
-- No **GitHub Actions**, o checkout do pacote compartilhado utiliza o secret **`GH_PAT`** (Personal Access Token clássico):
-  ```bash
-  git clone https://x-access-token:${{ secrets.GH_PAT }}@github.com/MarquesCleitonOrg/fase_05_hairdule_shared.git ../fase_05_hairdule_shared
-  pip install -e ../fase_05_hairdule_shared
-  ```
-- O SST v4 utiliza a action **`astral-sh/setup-uv@v5`** no runner para realizar o empacotamento ultrarrápido da Lambda Python antes do deploy.
-
-### 2. Suíte Obrigatória de Testes Manuais Diretos na AWS Lambda
-- A pasta dedicada **`docs/testes_manuais/`** é obrigatória neste repositório.
-- **`TESTES_SUCESSO.md`**: Massas JSON no padrão API Gateway v2 HTTP Payload (Version 2.0) cobrindo os fluxos felizes.
-- **`TESTES_ERROS.md`**: Massas JSON para validação de erros (400, 401, 409, 422).
+### 📁 2. Estrutura do Repositório
+- [x] **`pyproject.toml`** configurado com FastAPI, Mangum, SQLAlchemy, Pydantic v2, boto3, structlog e `hairdule_shared`
+- [x] **`handler.py`** com Mangum adapter para AWS Lambda
+- [x] **`src/app.py`** com CORS, LoggingMiddleware, Exception Handlers e Warmup do DB
+- [x] **`config/environments.ts`** com portas, VPC, Secrets e SG da Lambda
+- [x] **`sst.config.ts`** com deploy SST v4 (Pulumi nativo) e publicação de parâmetros SSM (`/sst/hairdule/${stage}/staff-service/*`)
+- [x] Workflows CI/CD (`feature-validation.yml`, `deploy-staging.yml`, `deploy-production.yml`, `hotfix-pipeline.yml`) com `GH_PAT`
 
 ---
 
-### 🧪 3. Testes Unitários e Testes Manuais na AWS
+### 🐍 3. Backend — Rotas FastAPI (Porta 3003)
 
-- [ ] `test_get_barbershop` → 200 com dados completos
-- [ ] `test_update_barbershop` → campos atualizados
-- [ ] `test_onboarding_complete_valid` → status muda para `Ativo`, 3 profissionais, 2 serviços, 7 business_hours
-- [ ] `test_onboarding_already_active` → 409 `BARBERSHOP_ALREADY_ACTIVE`
-- [ ] `test_onboarding_without_consent` → 400 `CONSENT_REQUIRED`
-- [ ] `test_public_barbershop` → dados públicos sem campos sensíveis
-- [ ] `test_photo_upload_invalid_type` → 400 `INVALID_FILE_TYPE`
-- [ ] Pasta `docs/testes_manuais/` criada com `TESTES_SUCESSO.md` e `TESTES_ERROS.md` (Massas JSON v2 2.0)
-- [ ] `test_photo_upload_too_large` → 400 `FILE_TOO_LARGE`
+- [x] **`GET /staff`** (JWT) — Lista profissionais do estabelecimento:
+  - Filtro por `active_only` (default true) e `service_id`
+  - OWNER: visualiza e-mail, telefone, cargo e visibilidade de agenda de todos
+  - BARBER: visualiza e-mail e telefone apenas do seu próprio perfil (demais mascarados/ocultos)
+- [x] **`GET /staff/{id}`** (JWT) — Dados detalhados de um profissional específico
+- [x] **`POST /staff`** (JWT OWNER/ADMIN) — Cadastro de profissional:
+  - Valida unicidade de e-mail se informado
+  - Vincula lista de `service_ids` na tabela `staff_services`
+  - Cria 7 registros padrão em `staff_hours` (jornada padrão com pausas)
+  - Valida código de cargo e visibilidade
+- [x] **`PUT /staff/{id}`** (JWT) — Atualização de profissional:
+  - OWNER: atualiza qualquer campo de qualquer membro
+  - BARBER: atualiza apenas seu próprio perfil
+  - Proteção `protect_staff_sensitive_fields`: bloqueia alteração de `role_code`, `is_active`, `agenda_visibility_code` e `barbershop_id` por não-proprietários
+  - Atualiza vínculos de serviços (`staff_services`) se informados
+- [x] **`DELETE /staff/{id}`** (JWT OWNER) — Desativação do profissional (Soft delete: `is_active = false`):
+  - Trava de segurança: impede que o último OWNER ativo do estabelecimento seja desativado
+- [x] **`GET /staff/{id}/hours`** (JWT) — Retorna a jornada de trabalho semanal (7 dias) com pausas (`breaks`)
+- [x] **`PUT /staff/{id}/hours`** (JWT OWNER ou próprio Staff) — Atualiza a grade de horários de trabalho semanal e pausas
+- [x] **`POST /staff/{id}/avatar`** (JWT OWNER ou próprio Staff) — Atualiza a foto/avatar do colaborador
+- [x] **`GET /public/staff`** (Público) — Listagem pública de profissionais por `barbershop_id` ou `slug` (Zero PII — sem e-mail, telefone ou dados sensíveis)
 
 ---
 
-### ⏳ 4. A Fazer — Pendências
-
-- [ ] Criar repositório `fase_11_hairdule_barbershop_service`
-- [ ] Implementar todas as rotas FastAPI
-- [ ] Implementar transação atômica do onboarding
-- [ ] Integrar `boto3` para upload S3
-- [ ] Escrever todos os testes
-- [ ] `pytest` → todos passando
-- [ ] Deploy via SST em staging
+### 🧪 4. Testes Automatizados e Documentação de Bateria
+- [x] Fixtures em `tests/conftest.py` com SQLite em memória e seeds de domínio
+- [x] `tests/test_staff.py` cobrindo fluxos felizes e exceções de autorização (OWNER vs BARBER)
+- [x] `tests/test_staff_hours.py` cobrindo atualização e validação de jornadas e pausas
+- [x] `tests/test_public.py` garantindo que nenhuma PII vaze no endpoint público
+- [x] Pasta `docs/testes_manuais/` com `TESTES_SUCESSO.md` e `TESTES_ERROS.md` (Massas JSON API Gateway v2 Payload 2.0)
 
 ---
 
@@ -97,10 +98,10 @@ A Fase 11 implementa o **serviço de gestão do estabelecimento**. Após fazer l
 
 | Categoria | Concluído | Total | % |
 |---|---|---|---|
-| Pré-requisitos | 0 | 3 | **0%** ⬜ |
-| Rotas FastAPI (6 rotas) | 0 | 6 | **0%** ⬜ |
-| Testes pytest (8 testes) | 0 | 8 | **0%** ⬜ |
-| Deploy e Integração | 0 | 3 | **0%** ⬜ |
-| **TOTAL** | **0** | **20** | **0%** ⬜ |
+| Pré-requisitos | 3 | 3 | **100%** 🟩 |
+| Estrutura & CI/CD | 6 | 6 | **100%** 🟩 |
+| Rotas FastAPI (9 rotas) | 9 | 9 | **100%** 🟩 |
+| Testes Unitários & Manuais | 5 | 5 | **100%** 🟩 |
+| **TOTAL** | **23** | **23** | **100%** 🟩 |
 
-> **Status:** ⬜ Aguardando Fases 05, 06 e 09 concluídas.
+> **Status:** 🟩 **Fase 11 Concluída com Sucesso.** 32/32 testes aprovados no pytest (90% de cobertura) e suíte manual pronta.

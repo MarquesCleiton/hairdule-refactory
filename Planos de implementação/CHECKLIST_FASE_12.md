@@ -2,114 +2,55 @@
 ## Checklist de Execução — Status Completo
 
 > **Repositório:** `fase_08_hairdule_ui_web` (Pasta: `src/app/features/staff/`)  
-> **Tecnologia:** Angular 19 + Reactive Forms + SCSS | Porta local: `4300`  
-> **Dependências Diretas:** Fase 11 (staff-service em `localhost:3003`)  
+> **Tecnologia:** Angular 19 + Standalone Components + Signals + Reactive Forms + SCSS | Porta local: `4300`  
+> **Dependências Diretas:** Fase 11 (staff-service em `localhost:3003` ou via API Gateway)  
 > **Regra de Centralização:** Esta fase é desenvolvida diretamente no repositório central `fase_08_hairdule_ui_web`, compartilhando autenticação, layout e design system.  
-> **Última verificação:** 2026-08-18
+> **Última atualização:** 2026-08-19 (Marco 3 — Build Angular 19 100% verde com 0 erros)  
+> **Status:** 🟩 **CONCLUÍDO COM SUCESSO**
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 12 implementa o módulo de **Gestão da Equipe / Profissionais (Staff)** no Web Dashboard SPA: listagem de barbeiros/profissionais, convite de novos colaboradores, definição de permissões (Dono vs Colaborador) e foto de perfil.
-
-É o "assistente de configuração inicial" da barbearia. Como configurar um celular novo: você passa por telas guiadas, define seus dados básicos, e no final está tudo pronto para usar.
-
----
-
-## 🧙 Analogia — O Assistente de Configuração em 5 Etapas
-
-```
-ETAPA 1: Registro    → já feito (Fase 10)
-ETAPA 2: Tipo        → "Que tipo de estabelecimento você tem?"
-         BusinessType    Cards visuais: 💈 Barbearia | 💅 Salão | 🧴 Spa...
-
-ETAPA 3: Profissionais → "Quem trabalha com você?"
-         StaffCount      Lista dinâmica: [+ Adicionar profissional]
-                         Nome + Cargo (Dono/Barbeiro)
-
-ETAPA 4: Serviços    → "O que você oferece?"
-         Services        Lista dinâmica: Nome + Duração + Preço
-
-ETAPA 5: Horários    → "Quando você abre?"
-         Hours           7 toggles (Dom-Sáb) + time pickers
-                         → POST /barbershop/onboarding-complete ✅
-```
+A Fase 12 implementa a **interface visual de Gestão de Profissionais e Equipe** no Web Dashboard SPA:
+1. Listagem completa de colaboradores com badges de cargo (`Proprietário`, `Barbeiro`, `Gerente`, `Recepcionista`) e visibilidade da agenda.
+2. Modal responsivo de cadastro e edição de colaboradores com vinculação de serviços habilitados.
+3. Tratamento de permissões dinâmicas (OWNER vs BARBER): campos restritos desabilitados para não-proprietários.
+4. Modal de configuração de grade semanal de trabalho (`Horários e Pausas de Almoço`).
+5. Modal de detalhes com upload de avatar e confirmação segura de desativação de profissional.
 
 ---
 
 ## ✅ Checklist Completo da Fase 12
 
 ### 🔗 1. Pré-requisitos
-
-- [ ] Fase 11 funcional (barbershop-service rodando em `localhost:3002`)
-- [ ] Fase 10 concluída (usuário consegue fazer login e chegar ao onboarding)
-
----
-
-### 🖼️ 2. Passo A — Página de Teste Simples
-
-- [ ] **`features/onboarding-test/`** — componente de teste técnico:
-  - Formulário único com todos os campos do `POST /barbershop/onboarding-complete`
-  - Exibe response bruta em `<pre>`
-  - Testa também `GET /barbershop` e `PUT /barbershop`
+- [x] Fase 11 concluída e homologada (`fase_11_hairdule_staff_service` ativo)
+- [x] Usuário autenticado e com estabelecimento ativo no Dashboard
 
 ---
 
-### 🎨 3. Passo B — Wizard de Onboarding Angular Material
-
-- [ ] **`features/onboarding/onboarding.component.ts`** — container do `mat-stepper`:
-  - `linear: true` — não pula etapas
-  - Dados intermediários salvos em `localStorage` (previne perda ao recarregar)
-  - Envio único no passo final (POST onboarding-complete)
-- [ ] **Etapa 2 — `business-type.component.ts`**:
-  - Cards visuais com ícone e nome por segmento
-  - Segmentos: 💈 Barbearia, 💅 Salão, 🧴 Spa, 💍 Esmalteria, 🌿 Estética, Outro
-  - Seleção única com feedback visual (card destacado)
-- [ ] **Etapa 3 — `staff-count.component.ts`**:
-  - Lista dinâmica de profissionais com `FormArray`
-  - Botão "Adicionar profissional" (min 1, max ilimitado)
-  - Campos: Nome (obrigatório), Cargo (Dono/Barbeiro)
-  - Botão remover em cada item
-- [ ] **Etapa 4 — `services-setup.component.ts`**:
-  - Lista dinâmica de serviços com `FormArray`
-  - Campos: Nome, Duração (minutos), Preço (R$)
-  - Botão "Adicionar serviço" (min 1)
-- [ ] **Etapa 5 — `hours-setup.component.ts`**:
-  - 7 linhas (Dom a Sáb) com toggle "Aberto/Fechado"
-  - Time pickers de abertura e fechamento
-  - Desabilitado quando fechado
-  - [Finalizar] → chama `POST /barbershop/onboarding-complete`
-  - Loading state + error handling
-  - Redirect para `/dashboard` após sucesso
-
----
-
-### 🔄 4. Gestão de Estado
-
-- [ ] `localStorage` salva dados intermediários de cada etapa
-- [ ] `localStorage` é limpo após onboarding bem-sucedido
-- [ ] Se usuário recarrega a página, retoma da etapa em que estava
-
----
-
-### 🧪 5. Validação Manual
-
-- [ ] Signup → redireciona para `/onboarding`
-- [ ] Todas as 5 etapas funcionam sem erro
-- [ ] POST onboarding-complete cria tudo no banco
-- [ ] Redirect para `/dashboard` após sucesso
-- [ ] Usuário que já completou onboarding não volta para esta tela
-
----
-
-### ⏳ 6. A Fazer — Pendências
-
-- [ ] Criar componentes do wizard
-- [ ] Implementar FormArray para staff e serviços
-- [ ] Integrar com barbershop-service (Fase 11)
-- [ ] Testar fluxo completo end-to-end
-- [ ] Build sem erros
+### 🎨 2. Componentes Angular 19 Standalone (`src/app/features/staff/`)
+- [x] **`models/staff.models.ts` & `services/staff.service.ts`**: Cliente HTTP tipado com Signals e métodos `listStaff()`, `getStaff()`, `createStaff()`, `updateStaff()`, `deleteStaff()`, `getStaffHours()`, `updateStaffHours()`, `updateStaffAvatar()` e `getPublicStaff()`.
+- [x] **`staff.component.ts|html|scss`**:
+  - Cards visuais em grid responsivo com foto/iniciais, nome, cargo, visibilidade da agenda, e-mail, telefone e status.
+  - Barra de estatísticas (Total, Ativos, Serviços Atribuídos, Gestão).
+  - Filtro por status (Todos, Ativos, Inativos, Gestão, Especialistas) e busca em tempo real por nome/e-mail/telefone.
+  - Botão `[+ Novo Profissional]` visível apenas para OWNER / ADMIN.
+- [x] **`staff-card.component.ts|html|scss`**:
+  - Card rico com Avatar, indicador de status online/ativo, badges de cargo com cores semânticas, chips de serviços e menu de ações rápidas.
+- [x] **`staff-form-dialog.component.ts|html|scss`**:
+  - Formulário reativo para criação e edição com validações.
+  - Seleção de múltiplos serviços com checkboxes e atalhos "Todos" / "Limpar".
+  - Proteção de permissões: campos `role_code` e `agenda_visibility_code` desabilitados para não-proprietários.
+- [x] **`staff-hours-dialog.component.ts|html|scss`**:
+  - Grade semanal de 7 dias com toggles de expediente, horários de início e término e lista dinâmica de pausas de almoço/descanso.
+  - Botão auxiliar *"Copiar Segunda para Ter-Sex"*.
+- [x] **`staff-detail-dialog.component.ts|html|scss`**:
+  - Modal de visão 360° do colaborador com upload de foto de perfil e resumo de serviços e expediente.
+- [x] **`staff-delete-dialog` (integrado)**:
+  - Confirmação de desativação com aviso claro e proteção para impedir a remoção do último OWNER ativo.
+- [x] **`app.routes.ts` & `dashboard-placeholder.component.html`**:
+  - Rota `/staff` protegida por `authGuard` e link direto no Dashboard.
 
 ---
 
@@ -117,11 +58,8 @@ ETAPA 5: Horários    → "Quando você abre?"
 
 | Categoria | Concluído | Total | % |
 |---|---|---|---|
-| Pré-requisitos | 0 | 2 | **0%** ⬜ |
-| Passo A — Teste | 0 | 1 | **0%** ⬜ |
-| Passo B — Wizard (5 etapas) | 0 | 5 | **0%** ⬜ |
-| Gestão de Estado | 0 | 3 | **0%** ⬜ |
-| Validação Manual | 0 | 5 | **0%** ⬜ |
-| **TOTAL** | **0** | **16** | **0%** ⬜ |
+| Pré-requisitos | 2 | 2 | **100%** 🟩 |
+| Componentes & Telas | 8 | 8 | **100%** 🟩 |
+| **TOTAL** | **10** | **10** | **100%** 🟩 |
 
-> **Status:** ⬜ Aguardando Fase 11 concluída.
+> **Status:** 🟩 **Fase 12 Concluída com Sucesso.** Angular 19 compilado sem erros e integrado com a Fase 11.

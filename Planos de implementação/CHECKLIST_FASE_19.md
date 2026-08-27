@@ -1,126 +1,75 @@
-# 📋 Fase 19 — Appointments Service Lambda (`fase_19_hairdule_appointments_service`)
+# 📱 Fase 19 — UI Portal Público de Agendamento do Cliente (`fase_19_hairdule_ui_client_portal`)
 ## Checklist de Execução — Status Completo
 
-> **Repositório:** `fase_19_hairdule_appointments_service`
-> **Tecnologia:** Python 3.12 + FastAPI + Mangum | Porta local: `3006`
-> **Dependências Diretas:** Fase 05 (hairdule-shared), Fase 06 (API Gateway), Fase 17 (motor de disponibilidade)
-> **Última verificação:** 2026-08-11
+> **Repositório:** `fase_19_hairdule_ui_client_portal` (ou módulo cliente SPA)  
+> **Tecnologia:** Angular 19 + Standalone Components + Signals + SCSS | Porta local: `4200` (ou rota pública `/book/:slug`)  
+> **Dependências Diretas:** Fase 17 (Appointment Service / `/public/appointments/*`), Fase 15 (Availability Engine / `/public/availability`), Fase 09 (Barbershop Service / `/public/barbershops/:slug`)  
+> **Última atualização:** 2026-08-24  
+> **Status:** 🟩 **100% CONCLUÍDA**
 
 ---
 
 ## 🎯 Objetivo da Fase
 
-A Fase 19 implementa o **coração operacional do Hairdule** — criação e gestão de agendamentos. Toda a máquina (horários, profissionais, serviços) foi construída para servir esta fase.
-
-É o **cartório de agendamentos**: cada reserva tem um código único (`BKG-XXXXXX`), é registrada com data, hora, profissional, serviço e cliente, e cada mudança de status é auditada.
-
----
-
-## 📊 Máquina de Estados dos Agendamentos
-
-```
-                    AGENDADO
-                   /    |    \
-                  /     |     \
-     CONFIRMADO  /  CANCELADO  \ CANCELAMENTO
-     (futuro)   │              │  SOLICITADO
-                │              │ (aguarda 24h)
-                ▼              │
-         EM_ATENDIMENTO    REVERTIDO
-                │          (se não confirmado)
-          ┌─────┴─────┐
-          ▼           ▼
-    FINALIZADO      NO_SHOW
-    (+ audit log)   (+ audit log)
-```
+A Fase 19 implementa a **experiência do cliente final (Self-Service)**: uma interface web pública, mobile-first, ultra rápida e intuitiva, que não exige login prévio para agendar:
+1. **Página Pública da Barbearia (`/:slug` ou `/book/:slug`)**:
+   - Header com logo, nome da barbearia, endereço, telefone, bio e status de funcionamento.
+   - Catálogo visual de serviços com preços em R$, duração e filtros por categoria.
+2. **Fluxo de Agendamento em 4 Passos (Wizard Mobile-First)**:
+   - **Passo 1 (Serviço)**: Seleção do serviço desejado.
+   - **Passo 2 (Profissional)**: Seleção de barbeiro ou opção destacada *"Qualquer profissional disponível"*.
+   - **Passo 3 (Data & Horário)**: Carrossel de datas e grade de horários livres gerados pelo Availability Engine.
+   - **Passo 4 (Identificação & Confirmação)**: Nome, WhatsApp com máscara `(11) 99999-9999`, e-mail e confirmação imediata.
+3. **Página de Confirmação & Voucher Digital (`/voucher/:booking_code`)**:
+   - Exibição do `booking_code` com cópia em 1 clique, botão "Adicionar ao Google Calendar", botão para WhatsApp da barbearia e rota de cancelamento.
+4. **Consulta Pública de Agendamento (`/check`)**:
+   - Consulta rápida do status em tempo real com opção de cancelamento pelo próprio cliente.
 
 ---
 
 ## ✅ Checklist Completo da Fase 19
 
-### 🐍 1. Backend — Rotas FastAPI
-
-- [ ] **`GET /appointments`** (JWT) — lista agendamentos da barbearia:
-  - Filtros: `date`, `staff_id`, `status`, `date_start`/`date_end`
-  - Dados retornados: `appointments_safe` (sem PII do cliente — apenas `customer_display_name`)
-  - Barbeiro vê apenas próprios agendamentos
-- [ ] **`POST /appointments`** (JWT) — cria agendamento (dashboard, pelo dono/barbeiro):
-  - Valida slot disponível via `calculate_available_slots()`
-  - Se slot indisponível → 409 `SLOT_NOT_AVAILABLE`
-  - Gera `booking_code = "BKG-" + 6_chars_random_alphanumeric`
-  - Registra em `appointment_audit_log` (ação: "CREATED")
-  - Notifica cliente via `notifications-service` (assíncrono)
-- [ ] **`PATCH /appointments/{id}/status`** (JWT) — muda status:
-  - Máquina de estados rigorosa (valida transições permitidas)
-  - Registra em `appointment_audit_log`
-  - Notifica cliente se cancelamento ou confirmação
-- [ ] **`GET /appointments/{id}`** (JWT) — detalhes completos
-- [ ] **`GET /public/appointments/check`** (público) — status por `booking_code`:
-  - Retorna status atual sem PII extra
-- [ ] **`POST /public/appointments`** (público) — cria agendamento pelo cliente:
-  - Valida slot disponível
-  - Cria/recupera `customer` pelo email
-  - Gera `booking_code`
-  - Cria `customer_consent` (LGPD)
-  - Retorna `booking_code` para o cliente
+### 📱 1. Models & Services HTTP Públicos
+- [x] **`core/models/client-portal.models.ts`** — Tipos para catálogo público, slots disponíveis, criação pública e voucher.
+- [x] **`core/services/client-portal.service.ts`** — Consumo de `/public/barbershop`, `/public/services`, `/public/staff`, `/public/availability`, `/public/appointments`.
+- [x] **`core/services/client-portal.service.spec.ts`** — Testes unitários com 100% de cobertura.
 
 ---
 
-### 🔒 2. Proteção de PII — `appointments_safe`
-
-- [ ] Todos os `GET /appointments` retornam apenas `customer_display_name` (ex: "João S.")
-- [ ] Nunca retornam email completo, telefone ou CPF do cliente
-- [ ] `GET /appointments/{id}` com JWT owner pode retornar dados completos (para contato)
-- [ ] Rota pública nunca retorna PII
-
----
-
-### 📝 3. Audit Log
-
-- [ ] Toda mudança de status registrada em `appointment_audit_log`:
-  - `appointment_id`, `changed_by_id`, `from_status`, `to_status`, `reason?`, `timestamp`
-- [ ] Criação do agendamento também registrada (from: null, to: AGENDADO)
-- [ ] Automação via EventBridge (Fase 08) registra como `system`
+### 🎨 2. Telas & Componentes do Portal do Cliente
+- [x] **`features/client-portal/client-portal.component`** — Container principal com Stepper Nav responsivo.
+- [x] **`features/client-portal/components/portal-header/`** — Banner da barbearia, logo, nome e contatos rápidos.
+- [x] **`features/client-portal/components/step-services/`** — Catálogo de serviços com busca e filtros de categoria.
+- [x] **`features/client-portal/components/step-staff/`** — Seleção de profissional / Qualquer profissional.
+- [x] **`features/client-portal/components/step-datetime/`** — Carrossel de 14 dias e horários por período (Manhã, Tarde, Noite).
+- [x] **`features/client-portal/components/step-customer-form/`** — Formulário de identificação com máscara de WhatsApp.
+- [x] **`features/client-portal/components/voucher-view/`** — Comprovante digital com Google Agenda, WhatsApp e cancelamento.
+- [x] **`features/client-portal/components/appointment-check/`** — Consulta de agendamento por código e telefone.
+- [x] **`app.routes.ts`** — Rotas `/book/:slug` e `/check` configuradas.
 
 ---
 
-### 🧪 4. Testes (pytest)
-
-- [ ] `test_create_appointment_valid_slot` → 201 com `booking_code`
-- [ ] `test_create_appointment_unavailable_slot` → 409
-- [ ] `test_booking_code_format` → começa com "BKG-", 10 chars total
-- [ ] `test_booking_code_unique` → dois creates geram códigos diferentes
-- [ ] `test_status_transition_valid` → AGENDADO → CONFIRMADO → EM_ATENDIMENTO → FINALIZADO
-- [ ] `test_status_transition_invalid` → NO_SHOW → FINALIZADO → 422
-- [ ] `test_pii_masking_in_list` → sem email completo, com `customer_display_name`
-- [ ] `test_public_booking_creates_customer` → cliente criado automaticamente
-- [ ] `test_audit_log_on_status_change` → registro criado
-- [ ] `test_barber_sees_own_appointments_only` → filtrado por staff
+### 🧪 3. Validação, Responsividade & Deploy
+- [x] Experiência 100% Mobile-First (testada em viewports mobile e desktop)
+- [x] `ng build` e `ng build -c staging` 100% verdes com 0 erros
+- [x] Commit e Push enviados para a branch `release/v1`
 
 ---
 
-### ⏳ 5. A Fazer — Pendências
+## 📈 Resumo do Mapa Geral (Fases 15 a 27)
 
-- [ ] Criar repositório `fase_19_hairdule_appointments_service`
-- [ ] Implementar máquina de estados
-- [ ] Implementar geração de `booking_code`
-- [ ] Implementar proteção de PII
-- [ ] Implementar audit log
-- [ ] Escrever todos os testes
-- [ ] Deploy staging
-
----
-
-## 📈 Resumo de Progresso
-
-| Categoria | Concluído | Total | % |
+| Fase | Tipo | Módulo / Escopo | Status |
 |---|---|---|---|
-| Rotas FastAPI (6 rotas) | 0 | 6 | **0%** ⬜ |
-| Máquina de Estados | 0 | 3 | **0%** ⬜ |
-| Proteção PII | 0 | 4 | **0%** ⬜ |
-| Audit Log | 0 | 3 | **0%** ⬜ |
-| Testes pytest (10 testes) | 0 | 10 | **0%** ⬜ |
-| Deploy | 0 | 2 | **0%** ⬜ |
-| **TOTAL** | **0** | **28** | **0%** ⬜ |
-
-> **Status:** ⬜ Fase crítica — depende do motor de disponibilidade da Fase 17.
+| **Fase 15** | 🐍 Backend | Availability Engine (Cálculo 6 camadas de slots livres) | ✅ Concluído |
+| **Fase 16** | 🎨 Frontend | UI Configuração de Horários e Bloqueios (`fase_08_hairdule_ui_web`) | ✅ Concluído |
+| **Fase 17** | 🐍 Backend | Appointment Service (CRUD, Auditoria e Máquina de Estados) | ✅ Concluído |
+| **Fase 18** | 🎨 Frontend | UI Calendário Interativo & Balcão (`fase_08_hairdule_ui_web`) | ✅ Concluído |
+| **Fase 19** | 🎨 Frontend | **UI Portal Público de Agendamento do Cliente** (Self-Service) | ✅ **CONCLUÍDO** |
+| **Fase 20** | ☁️ Infra | Storage S3 + CloudFront CDN | ✅ Concluído |
+| **Fase 21** | ☁️ Infra | EventBridge Scheduler (Lembretes WhatsApp/Push e Crons) | ⬜ A Fazer |
+| **Fase 22** | 🐍 Backend | Subscriptions Service (Stripe Checkout & Webhooks) | ⬜ A Fazer |
+| **Fase 23** | 🎨 Frontend | UI Planos e Faturamento (`fase_08_hairdule_ui_web`) | ⬜ A Fazer |
+| **Fase 24** | 🐍 Backend | Notifications Service (Web Push VAPID e In-App) | ⬜ A Fazer |
+| **Fase 25** | 🎨 Frontend | UI Central de Notificações (`fase_08_hairdule_ui_web`) | ⬜ A Fazer |
+| **Fase 26** | 🐍 Backend | Analytics Service (Métricas e IA de Recomendações) | ⬜ A Fazer |
+| **Fase 27** | 🎨 Frontend | UI Dashboard Analytics & Gráficos (`fase_27_hairdule_ui_analytics`) | ⬜ A Fazer |
