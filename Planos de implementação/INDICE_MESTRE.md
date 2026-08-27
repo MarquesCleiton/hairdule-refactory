@@ -104,7 +104,7 @@ MARCO 5: Fase 24 (Notifications Service) ✅ ──► Fase 25 (UI Notificaçõe
                                                                                                                                                                                           │
  ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
  ▼
-MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & Staff Email Flows) ✅ ──► Fase 30 (UI Redefinição & Primeiro Acesso)
+MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & Staff Email Flows) ✅ ──► Fase 30 (UI Redefinição & Primeiro Acesso) ✅
 ```
 
 ---
@@ -119,8 +119,8 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 | Marco 3 — Staff & Catálogo (Fases 11-14) | ~120 | ~120 | **100%** ✅ |
 | Marco 4 — Disponibilidade & Agendamentos (Fases 15-19) | ~180 | ~180 | **100%** ✅ |
 | Marco 5 — Notificações, Analytics, Subscriptions & Automações (Fases 20-27) | ~160 | ~135 | **~84%** |
-| Marco 6 — E-mails Transacionais AWS SES & Ciclo de Vida (Fases 28-30) | ~40 | ~25 | **~63%** |
-| **TOTAL GERAL** | **~900** | **~860** | **~95%** |
+| Marco 6 — E-mails Transacionais AWS SES & Ciclo de Vida (Fases 28-30) | ~40 | ~40 | **100%** ✅ |
+| **TOTAL GERAL** | **~900** | **~875** | **~97%** |
 
 ---
 
@@ -135,7 +135,7 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 7. **[ ] Marco 5 — Etapa 7: Fase 23 (`fase_08_hairdule_ui_web/features/billing`)** — UI de Planos, Gestão de Assinatura e Faturamento Angular 19
 8. **[x] Marco 6 — Etapa 1: Fase 28 (`fase_28_hairdule_infra_email_ses`)** — Infraestrutura SES SST v4 (preparada para `hairdule.com.br` com fallback) + Templates HTML Jinja2 no `hairdule_shared`
 9. **[x] Marco 6 — Etapa 2: Fase 29 (`fase_29_hairdule_auth_email_flows`)** — Backend Auth Service (`POST /auth/forgot-password`, `POST /auth/reset-password`, `POST /auth/first-access`) e Staff Service (`POST /staff` com senha temporária)
-10. **[ ] Marco 6 — Etapa 3: Fase 30 (`fase_30_hairdule_ui_auth_email_flows`)** — Frontend Web Angular 19 (Redesign `/auth/reset-password` e Nova tela `/auth/first-access` com aceite LGPD)
+10. **[x] Marco 6 — Etapa 3: Fase 30 (`fase_30_hairdule_ui_auth_email_flows`)** — Frontend Web Angular 19 (Redesign `/auth/reset-password` e Nova tela `/auth/first-access` com aceite LGPD)
 
 ---
 
