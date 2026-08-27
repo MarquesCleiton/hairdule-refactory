@@ -1,8 +1,7 @@
 # 📋 Hairdule 2.0 — Índice Mestre de Planos de Implementação
 
 > **Projeto:** Hairdule — SaaS de agendamentos para estabelecimentos de beleza  
-> **Arquitetura:** AWS Serverless (Lambda + Aurora + CloudFront + Cognito + API Gateway)  
-> **Total de Fases:** 27 | **Última atualização:** 2026-08-25 (Marco 4 Concluído — Marco 5 em Progresso)  
+> **Arquitetura:** AWS Serverless (Lambda + Aurora + CloudFront + Cognito + API G> **Total de Fases:** 30 | **Última atualização:** 2026-08-26 (Marco 4 Concluído — Marco 5 em Progresso — Marco 6 Especificado)  
 
 ---
 
@@ -22,7 +21,7 @@
 
 ---
 
-## ⚡ BLOCO 2 — Fatias Verticais Testáveis (Fases 06-27)
+## ⚡ BLOCO 2 — Fatias Verticais Testáveis (Fases 06-30)
 
 > Fatias verticais organizadas em Marcos de Entrega E2E (Backend + API GW + Frontend).
 
@@ -57,7 +56,7 @@
 | **18** | [CHECKLIST_FASE_18.md](./CHECKLIST_FASE_18.md) | Angular 19 — Calendário Interativo | `fase_08_hairdule_ui_web` (`features/calendar`) | ✅ 100% (3 Visões, 11 componentes, Modais, Ações Rápidas) |
 | **19** | [CHECKLIST_FASE_19.md](./CHECKLIST_FASE_19.md) | Angular 19 — Portal Público de Agendamento (porta 4200) | `fase_08_hairdule_ui_web` (`features/client-portal`) | ✅ 100% (Wizard 4 Passos, Voucher Digital, Consulta /check) |
 
-### 🌟 MARCO 5 — Notificações, Analytics, Monetização & Automações (Fases 21-27)
+### 🌟 MARCO 5 — Notificações, Analytics, Monetização & Automações (Fases 20-27)
 | Fase | Arquivo | Tecnologia | Repositório | Ordem de Execução | Status |
 |---|---|---|---|---|---|
 | **20** | [CHECKLIST_FASE_20.md](./CHECKLIST_FASE_20.md) | SST v4 + S3 + CloudFront CDN | `fase_20_hairdule_infra_cdn` | — | ✅ 100% (Homologado na AWS — CloudFront OAC) |
@@ -68,6 +67,13 @@
 | **21** | [CHECKLIST_FASE_21.md](./CHECKLIST_FASE_21.md) | SST v4 + EventBridge Scheduler & Automações | `fase_21_hairdule_infra_scheduler` | **5º do Marco 5** | ✅ 100% (Lembretes 5min + Analytics Diário 01:00 BRT na AWS Staging) |
 | **22** | [CHECKLIST_FASE_22.md](./CHECKLIST_FASE_22.md) | Lambda Python — Subscriptions + Stripe (3007) | `fase_22_hairdule_subscription_service` | **6º do Marco 5** | ⬜ 0% |
 | **23** | [CHECKLIST_FASE_23.md](./CHECKLIST_FASE_23.md) | Angular 19 — Planos e Faturamento | `fase_08_hairdule_ui_web` (`features/billing`) | **7º do Marco 5** | ⬜ 0% |
+
+### 🌟 MARCO 6 — E-mails Transacionais AWS SES & Ciclo de Vida de Identidade (Fases 28-30)
+| Fase | Arquivo | Tecnologia | Repositório | Ordem de Execução | Status |
+|---|---|---|---|---|---|
+| **28** | [CHECKLIST_FASE_28.md](./CHECKLIST_FASE_28.md) | SST v4 + Python — Infra & Motor SES + Jinja2 HTML | `fase_03_hairdule_infra_auth` / `fase_05_hairdule_shared` | **1º do Marco 6** | ⬜ 0% |
+| **29** | [CHECKLIST_FASE_29.md](./CHECKLIST_FASE_29.md) | Lambda Python — Fluxos de E-mail de Auth & Staff | `fase_06_hairdule_auth_service` / `fase_11_hairdule_staff_service` | **2º do Marco 6** | ⬜ 0% |
+| **30** | [CHECKLIST_FASE_30.md](./CHECKLIST_FASE_30.md) | Angular 19 — Telas de Redefinição & Primeiro Acesso | `fase_08_hairdule_ui_web` (`features/auth`) | **3º do Marco 6** | ⬜ 0% |
 
 ---
 
@@ -95,6 +101,10 @@ MARCO 4: Fase 15 (Availability Engine) ✅ ──► Fase 16 (Availability UI) �
  ┌───────────────────────────────────────────────────────────────────────────────────────────────────────┘
  ▼
 MARCO 5: Fase 24 (Notifications Service) ✅ ──► Fase 25 (UI Notificações) ✅ ──► Fase 26 (Analytics Service) ✅ ──► Fase 27 (UI Analytics) ✅ ──► Fase 21 (EventBridge Scheduler) ✅ ──► Fases 22 & 23 (Subscriptions E2E)
+                                                                                                                                                                                          │
+ ┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+ ▼
+MARCO 6: Fase 28 (Infra & Templates SES) ──► Fase 29 (Backend Auth & Staff Email Flows) ──► Fase 30 (UI Redefinição & Primeiro Acesso)
 ```
 
 ---
@@ -109,7 +119,8 @@ MARCO 5: Fase 24 (Notifications Service) ✅ ──► Fase 25 (UI Notificaçõe
 | Marco 3 — Staff & Catálogo (Fases 11-14) | ~120 | ~120 | **100%** ✅ |
 | Marco 4 — Disponibilidade & Agendamentos (Fases 15-19) | ~180 | ~180 | **100%** ✅ |
 | Marco 5 — Notificações, Analytics, Subscriptions & Automações (Fases 20-27) | ~160 | ~135 | **~84%** |
-| **TOTAL GERAL** | **~860** | **~835** | **~97%** |
+| Marco 6 — E-mails Transacionais AWS SES & Ciclo de Vida (Fases 28-30) | ~40 | 0 | **0%** |
+| **TOTAL GERAL** | **~900** | **~835** | **~93%** |
 
 ---
 
@@ -117,22 +128,14 @@ MARCO 5: Fase 24 (Notifications Service) ✅ ──► Fase 25 (UI Notificaçõe
 
 1. **[x] Marco 1 (Auth E2E & CDN)** — Fases 06, 07, 08 e 20 concluídas e homologadas na AWS Staging
 2. **[x] Marco 2 (Onboarding E2E)** — Fases 09 e 10 concluídas e homologadas na AWS Staging
-3. **[x] Fase 11 Staff Service pronto** — Microsserviço Staff CRUD, Permissões e Horários (porta 3003) com 32/32 testes e 90% de cobertura
-4. **[x] Fase 12 UI Staff pronto** — Gestão de Profissionais no Web Dashboard Angular (`src/app/features/staff`) com 0 erros de build
-5. **[x] Fase 13 Services Service pronto** — Microsserviço Catálogo de Serviços e Preços (porta 3004) com 31/31 testes e 92% de cobertura
-6. **[x] Fase 14 UI Services pronto** — Catálogo de Serviços Drag-and-Drop Angular (`src/app/features/services`) com 0 erros de build
-7. **[x] Fase 15 Availability Engine pronto** — Motor de Disponibilidade 6 Camadas (porta 3005) com 25/25 testes e 90% de cobertura
-8. **[x] Fase 16 UI Availability pronto** — UI de Configuração de Horários, Intervalos e Bloqueios Angular (`src/app/features/availability`) com 0 erros de build
-9. **[x] Fase 17 Appointment Service pronto** — Microsserviço de Agendamentos (porta 3006) com 32/32 testes E2E homologado na AWS Staging
-10. **[x] Fase 18 UI Calendar pronto** — UI de Calendário Interativo Angular com 3 visões (Semana/Dia/Lista), filtros, modais e ações rápidas
-11. **[x] Fase 19 UI Portal Público pronto** — Portal Público de Agendamento do Cliente (Self-Service) com Wizard 4 Passos, Voucher Digital e Consulta `/check`
-12. **[x] Fase 24 Notification Service pronto** — Microsserviço de Notificações In-App e Web Push VAPID (porta 3008) com 27/27 testes e 97% de cobertura
-13. **[x] Fase 25 UI Notifications pronto** — Central de Notificações Angular 19, Badge na Navbar, preferências e suporte a Web Push
-14. **[x] Fase 26 Analytics Service pronto** — Microsserviço de Analytics e Sugestões Inteligentes (porta 3009) com 20/20 testes e deploy na AWS Staging
-15. **[x] Fase 27 UI Analytics pronto** — Dashboard Analítico & BI Angular 19 com KPI cards, gráfico de faturamento, heatmap 7x24, rankings e sugestões de IA
-16. **[x] Fase 21 EventBridge Scheduler pronto** — Agendador automático SST v4 com Lembretes (5min) e Consolidação de Analytics (01:00 BRT) implantado na AWS Staging
-17. **[ ] Marco 5 — Etapa 6: Fase 22 (`fase_22_hairdule_subscription_service`)** — Microsserviço de Subscriptions, Planos Multi-tenant, Stripe Checkout e Webhooks (porta 3007)
-18. **[ ] Marco 5 — Etapa 7: Fase 23 (`fase_08_hairdule_ui_web/features/billing`)** — UI de Planos, Gestão de Assinatura e Faturamento Angular 19
+3. **[x] Marco 3 (Staff & Catálogo)** — Fases 11, 12, 13 e 14 concluídas
+4. **[x] Marco 4 (Disponibilidade & Agendamentos)** — Fases 15, 16, 17, 18 e 19 concluídas
+5. **[x] Marco 5 (Notificações, Analytics & Automações)** — Fases 24, 25, 26, 27 e 21 concluídas
+6. **[ ] Marco 5 — Etapa 6: Fase 22 (`fase_22_hairdule_subscription_service`)** — Microsserviço de Subscriptions, Planos Multi-tenant, Stripe Checkout e Webhooks (porta 3007)
+7. **[ ] Marco 5 — Etapa 7: Fase 23 (`fase_08_hairdule_ui_web/features/billing`)** — UI de Planos, Gestão de Assinatura e Faturamento Angular 19
+8. **[ ] Marco 6 — Etapa 1: Fase 28 (`fase_28_hairdule_infra_email_ses`)** — Infraestrutura SES SST v4 (preparada para `hairdule.com.br` com fallback) + Templates HTML Jinja2 no `hairdule_shared`
+9. **[ ] Marco 6 — Etapa 2: Fase 29 (`fase_29_hairdule_auth_email_flows`)** — Backend Auth Service (`POST /auth/forgot-password`, `POST /auth/reset-password`, `POST /auth/first-access`) e Staff Service (`POST /staff` com senha temporária)
+10. **[ ] Marco 6 — Etapa 3: Fase 30 (`fase_30_hairdule_ui_auth_email_flows`)** — Frontend Web Angular 19 (Redesign `/auth/reset-password` e Nova tela `/auth/first-access` com aceite LGPD)
 
 ---
 
