@@ -300,6 +300,28 @@ Cada política atende a uma camada funcional bem definida da infraestrutura:
         "secretsmanager:UntagResource"
       ],
       "Resource": "arn:aws:secretsmanager:us-east-1:*:secret:hairdule/*"
+    },
+    {
+      "Sid": "AmazonSESIdentityAndEmailManagement",
+      "Effect": "Allow",
+      "Action": [
+        "ses:VerifyDomainIdentity",
+        "ses:VerifyDomainDkim",
+        "ses:SetIdentityMailFromDomain",
+        "ses:GetIdentityVerificationAttributes",
+        "ses:GetIdentityDkimAttributes",
+        "ses:GetIdentityMailFromDomainAttributes",
+        "ses:DeleteIdentity",
+        "ses:TagResource",
+        "ses:UntagResource",
+        "ses:ListTagsForResource",
+        "ses:SendEmail",
+        "ses:SendRawEmail"
+      ],
+      "Resource": [
+        "arn:aws:ses:us-east-1:*:identity/*",
+        "arn:aws:ses:us-east-1:*:configuration-set/*"
+      ]
     }
   ]
 }
