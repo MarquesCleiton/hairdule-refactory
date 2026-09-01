@@ -80,3 +80,16 @@ hairdule-media-{stage}-{accountId}/
 - [x] Atualização do componente `BusinessDataDialogComponent` (substituição de Base64 FileReader por upload direto no S3 com preview imediato via blob URL)
 - [x] Atualização dos componentes `StaffDetailDialogComponent` (`features/staff` e `features/settings`)
 - [x] Build de produção do Angular 19 concluído com sucesso (`npm run build`)
+- [x] Tratamento de erro 422 `INAPPROPRIATE_CONTENT` no frontend com reversão de preview e notificação ao usuário
+
+---
+
+## 8. Auditoria e Moderação de Conteúdo (AWS Rekognition & MediaAuditLog)
+- [x] Criação da tabela de domínio `domain_moderation_statuses` (`APPROVED`, `FLAGGED`, `REJECTED`, `PENDING_REVIEW`) no `schema.sql` e migração `002_media_audit_logs.sql`
+- [x] Criação da tabela de auditoria `media_audit_logs` registrando autoria, data/hora, IP, User-Agent, status de moderação e labels detectados
+- [x] Modelos ORM SQLAlchemy `DomainModerationStatus` e `MediaAuditLog` implementados em `fase_05_hairdule_shared`
+- [x] Serviço `ContentModerator` implementado com AWS Rekognition (`detect_moderation_labels`) e fallback mock
+- [x] Políticas IAM com permissão `rekognition:DetectModerationLabels` adicionadas aos serviços Barbershop e Staff no SST v4
+- [x] Verificação ativa no endpoint `POST /barbershop/photo/confirm` com expurgo imediato do S3 em caso de violação
+- [x] Verificação ativa no endpoint `POST /staff/{id}/avatar/confirm` com expurgo do S3 e bloqueio
+- [x] Testes unitários com 100% de aprovação e cobertura adequada em todos os microsserviços

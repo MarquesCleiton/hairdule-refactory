@@ -102,6 +102,16 @@ CREATE TABLE IF NOT EXISTS domain_notification_types (
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
+-- 1.10 Status de Moderacao de Midia / Fotos
+CREATE TABLE IF NOT EXISTS domain_moderation_statuses (
+    code VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    display_order INT DEFAULT 0 NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
+
 -- =====================================================================
 -- 2. SEED DE DADOS ESTÁTICOS NAS TABELAS DE DOMÍNIO
 -- =====================================================================
@@ -170,6 +180,13 @@ INSERT INTO domain_notification_types (code, name, display_order) VALUES
 ('CANCELLATION', 'Cancelamento', 2),
 ('REMINDER', 'Lembrete', 3),
 ('SYSTEM', 'Comunicado do Sistema', 4)
+ON CONFLICT (code) DO NOTHING;
+
+INSERT INTO domain_moderation_statuses (code, name, description, display_order) VALUES
+('APPROVED', 'Aprovado', 'Conteúdo aprovado pelas diretrizes de moderação', 1),
+('FLAGGED', 'Sinalizado', 'Conteúdo com alerta sob revisão', 2),
+('REJECTED', 'Rejeitado', 'Conteúdo reprovado por violação das diretrizes', 3),
+('PENDING_REVIEW', 'Em Revisão', 'Aguardando avaliação manual do administrador', 4)
 ON CONFLICT (code) DO NOTHING;
 
 -- =====================================================================
@@ -491,6 +508,25 @@ CREATE TABLE IF NOT EXISTS admin_activity_logs (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- 3.21 Media Audit Logs (Auditoria e Moderacao de Imagens/Fotos)
+CREATE TABLE IF NOT EXISTS media_audit_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    barbershop_id UUID NOT NULL REFERENCES barbershops(id) ON DELETE CASCADE,
+    uploaded_by_user_id VARCHAR(255) NOT NULL,
+    entity_type VARCHAR(50) NOT NULL, -- 'BARBERSHOP_LOGO', 'BARBERSHOP_BANNER', 'STAFF_AVATAR'
+    entity_id UUID NOT NULL,          -- ID da barbearia ou do staff
+    storage_key TEXT NOT NULL,
+    previous_storage_key TEXT,
+    file_size_bytes INT,
+    content_type VARCHAR(50),
+    moderation_status_code VARCHAR(50) NOT NULL DEFAULT 'APPROVED' REFERENCES domain_moderation_statuses(code),
+    moderation_labels JSONB DEFAULT '[]'::jsonb,
+    rejection_reason TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- =====================================================================
 -- 4. ÍNDICES DE ALTA PERFORMANCE
 -- =====================================================================
@@ -525,3 +561,6 @@ CREATE INDEX IF NOT EXISTS ix_subscriptions_status_code ON subscriptions(status_
 CREATE INDEX IF NOT EXISTS ix_notifications_barbershop_id ON notifications(barbershop_id);
 CREATE INDEX IF NOT EXISTS ix_notifications_user_id ON notifications(user_id);
 CREATE INDEX IF NOT EXISTS ix_notifications_is_read ON notifications(is_read);
+CREATE INDEX IF NOT EXISTS ix_media_audit_logs_barbershop_id ON media_audit_logs(barbershop_id);
+CREATE INDEX IF NOT EXISTS ix_media_audit_logs_uploaded_by_user_id ON media_audit_logs(uploaded_by_user_id);
+CREATE INDEX IF NOT EXISTS ix_media_audit_logs_created_at ON media_audit_logs(created_at);
