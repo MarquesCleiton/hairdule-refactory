@@ -60,6 +60,7 @@
 | Fase | Arquivo | Tecnologia | Repositório | Ordem de Execução | Status |
 |---|---|---|---|---|---|
 | **20** | [CHECKLIST_FASE_20.md](./CHECKLIST_FASE_20.md) | SST v4 + S3 + CloudFront CDN | `fase_20_hairdule_infra_cdn` | — | ✅ 100% (Homologado na AWS — CloudFront OAC) |
+| **S3 Mídias** | [CHECKLIST_STORAGE_S3_FOTOS.md](./CHECKLIST_STORAGE_S3_FOTOS.md) | AWS S3 Presigned URLs (Upload & Leitura) | `fase_05_hairdule_shared` / `fase_09` / `fase_11` / `fase_08` | — | ⏳ Em Execução |
 | **24** | [CHECKLIST_FASE_24.md](./CHECKLIST_FASE_24.md) | Lambda Python — Notificações + Web Push VAPID (3008) | `fase_24_hairdule_notification_service` | **1º do Marco 5** | ✅ 100% (27/27 testes pytest verdes, 97% cobertura, VAPID RFC 8292) |
 | **25** | [CHECKLIST_FASE_25.md](./CHECKLIST_FASE_25.md) | Angular 19 — Central de Notificações | `fase_08_hairdule_ui_web` (`features/notifications`) | **2º do Marco 5** | ✅ 100% (Badge Navbar, Signals, Polling 30s, Web Push VAPID, 46/46 testes verdes) |
 | **26** | [CHECKLIST_FASE_26.md](./CHECKLIST_FASE_26.md) | Lambda Python — Analytics + IA (3009) | `fase_26_hairdule_analytics_service` | **3º do Marco 5** | ✅ 100% (20/20 testes pytest verdes, 98% cobertura, IA Heurística, API Gateway) |
