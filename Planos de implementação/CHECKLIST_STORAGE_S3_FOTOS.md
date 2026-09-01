@@ -93,3 +93,10 @@ hairdule-media-{stage}-{accountId}/
 - [x] Verificação ativa no endpoint `POST /barbershop/photo/confirm` com expurgo imediato do S3 em caso de violação
 - [x] Verificação ativa no endpoint `POST /staff/{id}/avatar/confirm` com expurgo do S3 e bloqueio
 - [x] Testes unitários com 100% de aprovação e cobertura adequada em todos os microsserviços
+
+---
+
+## 9. Retenção Probatória e S3 Object Versioning (Opção A)
+- [x] Ativação de `BucketVersioningV2` no `MediaBucket` em `fase_20_hairdule_infra_cdn` (preservação de versões anteriores com VersionId ao invés de expurgo físico)
+- [x] Configuração de `BucketLifecycleConfigurationV2` com expiração de versões não-atuais após 90 dias (retenção probatória com descarte automático de custo)
+- [x] Suporte a `version_id` e método `list_object_versions` implementados em `s3_adapter.py` no `fase_05_hairdule_shared` para recuperação pericial
