@@ -186,7 +186,8 @@ INSERT INTO domain_moderation_statuses (code, name, description, display_order) 
 ('APPROVED', 'Aprovado', 'Conteúdo aprovado pelas diretrizes de moderação', 1),
 ('FLAGGED', 'Sinalizado', 'Conteúdo com alerta sob revisão', 2),
 ('REJECTED', 'Rejeitado', 'Conteúdo reprovado por violação das diretrizes', 3),
-('PENDING_REVIEW', 'Em Revisão', 'Aguardando avaliação manual do administrador', 4)
+('PENDING_REVIEW', 'Em Revisão', 'Aguardando avaliação manual do administrador', 4),
+('UNVERIFIED', 'Não Verificado', 'Imagem carregada sem moderação automatizada, aguardando validação posterior', 5)
 ON CONFLICT (code) DO NOTHING;
 
 -- =====================================================================

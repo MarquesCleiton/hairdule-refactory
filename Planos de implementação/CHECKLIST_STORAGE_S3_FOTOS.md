@@ -85,14 +85,14 @@ hairdule-media-{stage}-{accountId}/
 ---
 
 ## 8. Auditoria e Moderação de Conteúdo (AWS Rekognition & MediaAuditLog)
-- [x] Criação da tabela de domínio `domain_moderation_statuses` (`APPROVED`, `FLAGGED`, `REJECTED`, `PENDING_REVIEW`) no `schema.sql` e migração `002_media_audit_logs.sql`
+- [x] Criação da tabela de domínio `domain_moderation_statuses` (`APPROVED`, `FLAGGED`, `REJECTED`, `PENDING_REVIEW`, `UNVERIFIED`) no `schema.sql` e migrações `002_media_audit_logs.sql` e `003_add_unverified_moderation_status.sql`
 - [x] Criação da tabela de auditoria `media_audit_logs` registrando autoria, data/hora, IP, User-Agent, status de moderação e labels detectados
 - [x] Modelos ORM SQLAlchemy `DomainModerationStatus` e `MediaAuditLog` implementados em `fase_05_hairdule_shared`
-- [x] Serviço `ContentModerator` implementado com AWS Rekognition (`detect_moderation_labels`) e fallback mock
-- [x] Políticas IAM com permissão `rekognition:DetectModerationLabels` adicionadas aos serviços Barbershop e Staff no SST v4
-- [x] Verificação ativa no endpoint `POST /barbershop/photo/confirm` com expurgo imediato do S3 em caso de violação
-- [x] Verificação ativa no endpoint `POST /staff/{id}/avatar/confirm` com expurgo do S3 e bloqueio
-- [x] Testes unitários com 100% de aprovação e cobertura adequada em todos os microsserviços
+- [x] Serviço `ContentModerator` implementado com suporte a AWS Rekognition (`detect_moderation_labels`) e controle por Feature Flag (`MEDIA_MODERATION_ENABLED`)
+- [x] **Custo Zero & Eficiência:** Moderação automatizada mantida desabilitada por padrão (`MEDIA_MODERATION_ENABLED=false`), garantindo R$ 0,00 de custo na AWS e confirmação instantânea das fotos, registrando status `UNVERIFIED` na auditoria
+- [x] Políticas IAM com permissão `rekognition:DetectModerationLabels` mantidas nos serviços Barbershop e Staff para reativação imediata sob demanda
+- [x] Verificação ativa nos endpoints `POST /barbershop/photo/confirm` e `POST /staff/{id}/avatar/confirm` gravando auditoria completa e expurgando fotos no S3 quando a moderação estiver ativa e detectar violações
+- [x] Testes unitários e de integração com 100% de aprovação em todos os microsserviços (validando fluxos com moderação ativa e com status `UNVERIFIED`)
 
 ---
 
