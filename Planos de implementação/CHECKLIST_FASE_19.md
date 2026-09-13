@@ -31,28 +31,38 @@ A Fase 19 implementa a **experiência do cliente final (Self-Service)**: uma int
 
 ### 📱 1. Models & Services HTTP Públicos
 - [x] **`core/models/client-portal.models.ts`** — Tipos para catálogo público, slots disponíveis, criação pública e voucher.
-- [x] **`core/services/client-portal.service.ts`** — Consumo de `/public/barbershop`, `/public/services`, `/public/staff`, `/public/availability`, `/public/appointments`.
-- [x] **`core/services/client-portal.service.spec.ts`** — Testes unitários com 100% de cobertura.
+- [x] **`core/models/customer.models.ts`** — Tipos TypeScript para CRM de clientes (Customer, CustomerDetail, History, Payloads).
+- [x] **`core/services/client-portal.service.ts`** — Consumo de `/public/barbershop`, `/public/services`, `/public/staff`, `/public/availability`, `/public/appointments`, e `/public/appointments/by-phone`.
+- [x] **`core/services/customer.service.ts`** — Gestão reativa completa de clientes (CRUD, listagem paginada, busca debounced, histórico e métricas).
+- [x] **`core/services/in-app-notification.service.ts`** — Polling periódico de 20s para notificações do Hairy e badge de pendência.
 
 ---
 
-### 🎨 2. Telas & Componentes do Portal do Cliente
-- [x] **`features/client-portal/client-portal.component`** — Container principal com Stepper Nav responsivo.
+### 🎨 2. Telas & Componentes do Portal do Cliente & CRM
+- [x] **`features/client-portal/client-portal.component`** — Barbearia Landing Home com botões de ação e Stepper Nav responsivo.
 - [x] **`features/client-portal/components/portal-header/`** — Banner da barbearia, logo, nome e contatos rápidos.
-- [x] **`features/client-portal/components/step-services/`** — Catálogo de serviços com busca e filtros de categoria.
-- [x] **`features/client-portal/components/step-staff/`** — Seleção de profissional / Qualquer profissional.
-- [x] **`features/client-portal/components/step-datetime/`** — Carrossel de 14 dias e horários por período (Manhã, Tarde, Noite).
-- [x] **`features/client-portal/components/step-customer-form/`** — Formulário de identificação com máscara de WhatsApp.
-- [x] **`features/client-portal/components/voucher-view/`** — Comprovante digital com Google Agenda, WhatsApp e cancelamento.
-- [x] **`features/client-portal/components/appointment-check/`** — Consulta de agendamento por código e telefone.
-- [x] **`app.routes.ts`** — Rotas `/book/:slug` e `/check` configuradas.
+- [x] **`features/client-portal/components/step-services/`** — Catálogo de serviços com busca e visual elegante.
+- [x] **`features/client-portal/components/step-staff/`** — Seleção de profissional com opção destacada "Sem preferência" (load balancing inteligente).
+- [x] **`features/client-portal/components/step-datetime/`** — Carrossel de datas e grade de horários livres por período.
+- [x] **`features/client-portal/components/step-customer-form/`** — Formulário com máscara de WhatsApp, e-mail obrigatório e checkbox de Termos LGPD.
+- [x] **`features/client-portal/components/privacy-policy-modal/`** — Modal com as 6 cláusulas completas da LGPD.
+- [x] **`features/client-portal/components/voucher-view/`** — Comprovante digital com badge "Aguardando confirmação", Google Agenda, WhatsApp e cancelamento (1h).
+- [x] **`features/client-portal/components/appointment-check/`** — Consulta de agendamentos por telefone (`/consultar`) e cancelamento com antecedência de 1h.
+- [x] **`features/clients/`** — Módulo completo de CRM (`/clientes` e `/clientes/:id`):
+  - Listagem com busca debounced, ordenação e badges (aniversário, atendimentos).
+  - Modal de cadastro e edição manual de clientes.
+  - Tela de detalhes com métricas de fidelidade, histórico cronológico e notas internas.
+- [x] **`shared/components/share-booking-modal/`** — Modal de compartilhamento rápido com Web Share API, WhatsApp, Telegram, Copiar Link e QR Code.
+- [x] **Menu Ações Rápidas no Botão "+"** — Action sheet flutuante no Meu Dia e botão na Agenda para agendar ou compartilhar link.
 
 ---
 
 ### 🧪 3. Validação, Responsividade & Deploy
-- [x] Experiência 100% Mobile-First (testada em viewports mobile e desktop)
-- [x] `ng build` e `ng build -c staging` 100% verdes com 0 erros
-- [x] Commit e Push enviados para a branch `release/v1`
+- [x] Experiência 100% Mobile-First (design system com paleta aqua, glassmorphism e micro-interações)
+- [x] Notificações do Hairy com badge "Pendente confirmação" em tempo real
+- [x] Testes backend pytest (54/54 testes passando 100%)
+- [x] `npm run build` do Angular 19 100% verde com 0 erros de compilação
+- [x] Rotas `/clientes`, `/clientes/:id`, `/agendar/:slug` e `/consultar` configuradas e integradas na navegação desktop e mobile
 
 ---
 
