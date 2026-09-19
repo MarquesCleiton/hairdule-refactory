@@ -108,7 +108,18 @@ UPDATE subscriptions SET status = 'Ativo', plan_id = X
 
 ---
 
-### 🧪 5. Testes (pytest)
+### 🌐 5. Estratégia de Rede, NAT & FinOps (Saída Stripe API)
+
+> [!TIP]
+> **Decisão Arquitetural Mapeada:**  
+> O SDK da Stripe necessita de conexão de saída HTTPS para `api.stripe.com`.
+> 1. **Ambiente Staging:** A Lambda roda associada à VPC para acessar o Aurora, utilizando a **NAT Instance única (`t4g.nano`)** da VPC para saída à internet (~$7/mês).
+> 2. **Evolução Serverless (Produção / Custo Zero de NAT):** Os eventos de Webhook e Workers de comunicação externa da Stripe podem ser desacoplados via SQS/EventBridge, executando **fora da VPC** com acesso à internet gratuito ($0,00 de NAT).
+> 3. **Guarda de Conectividade Offline:** A rotina agendada diária da Fase 21 DEVE incluir a função de verificação rápida via socket (`_is_database_available`) para encerrar graciosamente com status `200 SKIPPED` caso o Aurora esteja desligado para economia.
+
+---
+
+### 🧪 6. Testes (pytest)
 
 - [ ] `test_list_plans` → retorna planos com preços em centavos
 - [ ] `test_checkout_creates_stripe_session` → mock Stripe, retorna `session_url`
@@ -119,21 +130,22 @@ UPDATE subscriptions SET status = 'Ativo', plan_id = X
 - [ ] `test_can_add_staff_free_plan` → bloqueia após limite
 - [ ] `test_plan_downgrade_on_cancellation` → volta para Free
 - [ ] `test_daily_expiration_check` → rotina diária atualiza status de trials vencidos e alerta inadimplentes
+- [ ] `test_database_offline_guard` → validação prévia de banco offline no disparo do Scheduler (< 1.5s)
 
 ---
 
-### ⏳ 6. A Fazer — Pendências
+### ⏳ 7. A Fazer — Pendências
 
 - [ ] Criar repositório `fase_22_hairdule_subscriptions_service`
 - [ ] Configurar conta Stripe (sandbox)
 - [ ] Implementar integração Stripe SDK
 - [ ] Implementar webhook com verificação HMAC
-- [ ] Implementar rota/handler de rotina diária (`POST /internal/check-expirations`)
+- [ ] Implementar rota/handler de rotina diária (`POST /internal/check-expirations`) com guarda de DB offline
 - [ ] Criar planos no painel Stripe (Básico, Profissional, Ilimitado)
 - [ ] Escrever todos os testes com mock Stripe
 - [ ] Configurar webhook URL no painel Stripe (staging)
 - [ ] Deploy staging e testar com `stripe listen --forward-to`
-- [ ] **Implementar no `fase_21_hairdule_infra_scheduler` a regra diária 00:00 BRT apontando para esta Lambda**
+- [ ] **Implementar no `fase_21_hairdule_infra_scheduler` a regra diária 00:00 BRT apontando para esta Lambda com guarda offline**
 
 ---
 

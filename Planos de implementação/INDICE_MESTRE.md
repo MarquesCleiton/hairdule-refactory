@@ -1,7 +1,8 @@
 # 📋 Hairdule 2.0 — Índice Mestre de Planos de Implementação
 
 > **Projeto:** Hairdule — SaaS de agendamentos para estabelecimentos de beleza  
-> **Arquitetura:** AWS Serverless (Lambda + Aurora + CloudFront + Cognito + API G> **Total de Fases:** 30 | **Última atualização:** 2026-08-26 (Marco 4 Concluído — Marco 5 em Progresso — Marco 6 Especificado)  
+> **Arquitetura:** AWS Serverless (Lambda + Aurora PostgreSQL 18.4 + CloudFront + Cognito + API Gateway v2)  
+> **Total de Fases:** 32 | **Última atualização:** 2026-09-16 (Otimização FinOps AWS & Mapeamento de Faturamento/NAT)  
 
 ---
 
@@ -11,12 +12,12 @@
 
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
-| **01** | [CHECKLIST_FASE_01.md](./CHECKLIST_FASE_01.md) | SST v4 + VPC | `fase_01_hairdule_infra_network` | ✅ 100% (Homologado na AWS Staging) |
+| **01** | [CHECKLIST_FASE_01.md](./CHECKLIST_FASE_01.md) | SST v4 + VPC | `fase_01_hairdule_infra_network` | ✅ 100% (Homologado — VPC Endpoints redundantes removidos; NAT otimizado) |
 | **02** | [CHECKLIST_FASE_02.md](./CHECKLIST_FASE_02.md) | SST v4 + SG + KMS | `fase_02_hairdule_infra_security` | ✅ 100% (Homologado na AWS Staging) |
 | **03** | [CHECKLIST_FASE_03.md](./CHECKLIST_FASE_03.md) | SST v4 + Cognito + Secrets | `fase_03_hairdule_infra_auth` | ✅ 100% (Homologado na AWS Staging) |
-| **04** | [CHECKLIST_FASE_04.md](./CHECKLIST_FASE_04.md) | Python + Aurora (PG 18.4) + Secrets | `fase_04_hairdule_db` | ✅ 100% (Homologado na AWS Staging) |
+| **04** | [CHECKLIST_FASE_04.md](./CHECKLIST_FASE_04.md) | Python + Aurora (PG 18.4) + Secrets | `fase_04_hairdule_db` | ✅ 100% (Homologado — 100% sob demanda via scripts start/stop) |
 | **04.1** | [CHECKLIST_FASE_04_1.md](./CHECKLIST_FASE_04_1.md) | Python + SST v4 + Lambda VPC | `fase_04_1_hairdule_db_runner` | ✅ 100% (Homologado na AWS Staging) |
-| **04.2** | [CHECKLIST_FASE_04_2.md](./CHECKLIST_FASE_04_2.md) | SST v4 + EC2 SSM + Auto-Stop | `fase_04_2_hairdule_bastion` | ✅ 100% (Homologado na AWS Staging) |
+| **04.2** | [CHECKLIST_FASE_04_2.md](./CHECKLIST_FASE_04_2.md) | SST v4 + EC2 SSM + Auto-Stop | `fase_04_2_hairdule_bastion` | ✅ 100% (Homologado — Bug Pulumi corrigido, desligado por padrão) |
 | **05** | [CHECKLIST_FASE_05.md](./CHECKLIST_FASE_05.md) | Python Package (Lambda Layer) | `fase_05_hairdule_shared` | ✅ 100% (Homologado na AWS Staging) |
 
 ---
@@ -29,7 +30,7 @@
 | Fase | Arquivo | Tecnologia | Repositório | Status |
 |---|---|---|---|---|
 | **06** | [CHECKLIST_FASE_06.md](./CHECKLIST_FASE_06.md) | Lambda Python 3.12 — Auth Service (porta 3001) | `fase_06_hairdule_auth_service` | ✅ 100% (Homologado na AWS — IAM Auth) |
-| **07** | [CHECKLIST_FASE_07.md](./CHECKLIST_FASE_07.md) | SST v4 + API Gateway v2 + WAF | `fase_07_hairdule_infra_api` | ✅ 100% (Homologado na AWS — HTTP API) |
+| **07** | [CHECKLIST_FASE_07.md](./CHECKLIST_FASE_07.md) | SST v4 + API Gateway v2 + WAF | `fase_07_hairdule_infra_api` | ✅ 100% (Homologado — WAF condicionado a Produção; Rate Limit nativo) |
 | **08** | [CHECKLIST_FASE_08.md](./CHECKLIST_FASE_08.md) | Angular 19 — Web Dashboard SPA (Auth UI) | `fase_08_hairdule_ui_web` | ✅ 100% (Implantado na AWS — CloudFront CDN) |
 | **20** | [CHECKLIST_FASE_20.md](./CHECKLIST_FASE_20.md) | SST v4 + S3 + CloudFront CDN | `fase_20_hairdule_infra_cdn` | ✅ 100% (Homologado na AWS — CloudFront OAC) |
 
@@ -65,16 +66,23 @@
 | **25** | [CHECKLIST_FASE_25.md](./CHECKLIST_FASE_25.md) | Angular 19 — Central de Notificações | `fase_08_hairdule_ui_web` (`features/notifications`) | **2º do Marco 5** | ✅ 100% (Badge Navbar, Signals, Polling 30s, Web Push VAPID, 46/46 testes verdes) |
 | **26** | [CHECKLIST_FASE_26.md](./CHECKLIST_FASE_26.md) | Lambda Python — Analytics + IA (3009) | `fase_26_hairdule_analytics_service` | **3º do Marco 5** | ✅ 100% (20/20 testes pytest verdes, 98% cobertura, IA Heurística, API Gateway) |
 | **27** | [CHECKLIST_FASE_27.md](./CHECKLIST_FASE_27.md) | Angular — Dashboard Analytics + Heatmap | `fase_08_hairdule_ui_web` (`features/analytics`) | **4º do Marco 5** | ✅ 100% (67/67 testes verdes, Gráfico SVG, Heatmap 7x24, Rankings, IA Suggestions) |
-| **21** | [CHECKLIST_FASE_21.md](./CHECKLIST_FASE_21.md) | SST v4 + EventBridge Scheduler & Automações | `fase_21_hairdule_infra_scheduler` | **5º do Marco 5** | ✅ 100% (Lembretes 5min + Analytics Diário 01:00 BRT na AWS Staging) |
-| **22** | [CHECKLIST_FASE_22.md](./CHECKLIST_FASE_22.md) | Lambda Python — Subscriptions + Stripe (3007) | `fase_22_hairdule_subscription_service` | **6º do Marco 5** | ⬜ 0% |
-| **23** | [CHECKLIST_FASE_23.md](./CHECKLIST_FASE_23.md) | Angular 19 — Planos e Faturamento | `fase_08_hairdule_ui_web` (`features/billing`) | **7º do Marco 5** | ⬜ 0% |
+| **21** | [CHECKLIST_FASE_21.md](./CHECKLIST_FASE_21.md) | SST v4 + EventBridge Scheduler & Automações | `fase_21_hairdule_infra_scheduler` | **5º do Marco 5** | ✅ 100% (Lembretes 5min + Guarda DB Offline em Staging) |
+| **22** | [CHECKLIST_FASE_22.md](./CHECKLIST_FASE_22.md) | Lambda Python — Subscriptions + Stripe (3007) | `fase_22_hairdule_subscription_service` | **6º do Marco 5** | ⏳ **Próximo a Executar** (Stripe SDK + NAT/Workers fora da VPC) |
+| **23** | [CHECKLIST_FASE_23.md](./CHECKLIST_FASE_23.md) | Angular 19 — Planos e Faturamento | `fase_08_hairdule_ui_web` (`features/billing`) | **7º do Marco 5** | ⬜ 0% (Após Fase 22) |
 
 ### 🌟 MARCO 6 — E-mails Transacionais AWS SES & Ciclo de Vida de Identidade (Fases 28-30)
 | Fase | Arquivo | Tecnologia | Repositório | Ordem de Execução | Status |
 |---|---|---|---|---|---|
 | **28** | [CHECKLIST_FASE_28.md](./CHECKLIST_FASE_28.md) | SST v4 + Python — Infra & Motor SES + Jinja2 HTML | `fase_03_hairdule_infra_auth` / `fase_05_hairdule_shared` | **1º do Marco 6** | ✅ 100% (Templates Jinja2, SES Adapter, 18/18 testes verdes) |
-| **29** | [CHECKLIST_FASE_29.md](./CHECKLIST_FASE_29.md) | Lambda Python — Fluxos de E-mail de Auth & Staff | `fase_06_hairdule_auth_service` / `fase_11_hairdule_staff_service` | **2º do Marco 6** | ⬜ 0% |
-| **30** | [CHECKLIST_FASE_30.md](./CHECKLIST_FASE_30.md) | Angular 19 — Telas de Redefinição & Primeiro Acesso | `fase_08_hairdule_ui_web` (`features/auth`) | **3º do Marco 6** | ⬜ 0% |
+| **29** | [CHECKLIST_FASE_29.md](./CHECKLIST_FASE_29.md) | Lambda Python — Fluxos de E-mail de Auth & Staff | `fase_06_hairdule_auth_service` / `fase_11_hairdule_staff_service` | **2º do Marco 6** | ✅ 100% (Homologado — Rotas de reset, primeiro acesso e envio SES) |
+| **30** | [CHECKLIST_FASE_30.md](./CHECKLIST_FASE_30.md) | Angular 19 — Telas de Redefinição & Primeiro Acesso | `fase_08_hairdule_ui_web` (`features/auth`) | **3º do Marco 6** | ✅ 100% (Homologado — Telas de reset-password e first-access com LGPD) |
+
+### 🌟 MARCO 7 — Observabilidade de Negócio & Portal SuperAdmin (Fases 31-32)
+| Fase | Arquivo | Tecnologia | Repositório | Ordem de Execução | Status |
+|---|---|---|---|---|---|
+| **32** | [PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md](./PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md) | SST v4 + Cognito App Client & RBAC Groups | `fase_32_hairdule_infra_auth_admin` | **1º do Marco 7** | ✅ 100% (Deploy SST v4 na AWS Staging via CI/CD) |
+| **31** | [PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md](./PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md) | Angular 19 Standalone — Portal SuperAdmin SPA | `fase_31_hairdule_ui_admin` | **2º do Marco 7** | ✅ 100% (Deploy S3 + CloudFront HTTPS) |
+| **31.1** | [PLANO_DETALHE_BARBEARIA_E_GOVERNANCA_ADMIN.md](./PLANO_DETALHE_BARBEARIA_E_GOVERNANCA_ADMIN.md) | Angular 19 — Detalhe 360° da Barbearia (UUID) & Gestão Admin | `fase_31_hairdule_ui_admin` | **3º do Marco 7** | ⏳ Pronto para Execução |
 
 ---
 
@@ -132,11 +140,11 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 3. **[x] Marco 3 (Staff & Catálogo)** — Fases 11, 12, 13 e 14 concluídas
 4. **[x] Marco 4 (Disponibilidade & Agendamentos)** — Fases 15, 16, 17, 18 e 19 concluídas
 5. **[x] Marco 5 (Notificações, Analytics & Automações)** — Fases 24, 25, 26, 27 e 21 concluídas
-6. **[ ] Marco 5 — Etapa 6: Fase 22 (`fase_22_hairdule_subscription_service`)** — Microsserviço de Subscriptions, Planos Multi-tenant, Stripe Checkout e Webhooks (porta 3007)
-7. **[ ] Marco 5 — Etapa 7: Fase 23 (`fase_08_hairdule_ui_web/features/billing`)** — UI de Planos, Gestão de Assinatura e Faturamento Angular 19
-8. **[x] Marco 6 — Etapa 1: Fase 28 (`fase_28_hairdule_infra_email_ses`)** — Infraestrutura SES SST v4 (preparada para `hairdule.com.br` com fallback) + Templates HTML Jinja2 no `hairdule_shared`
-9. **[x] Marco 6 — Etapa 2: Fase 29 (`fase_29_hairdule_auth_email_flows`)** — Backend Auth Service (`POST /auth/forgot-password`, `POST /auth/reset-password`, `POST /auth/first-access`) e Staff Service (`POST /staff` com senha temporária)
-10. **[x] Marco 6 — Etapa 3: Fase 30 (`fase_30_hairdule_ui_auth_email_flows`)** — Frontend Web Angular 19 (Redesign `/auth/reset-password` e Nova tela `/auth/first-access` com aceite LGPD)
+6. **[x] Marco 6 (E-mails Transacionais SES & Ciclo de Vida)** — Fases 28, 29 e 30 concluídas
+7. **[x] Marco 7 (Observabilidade & Portal Admin)** — Fases 32 e 31 concluídas
+8. **[ ] 🎯 ALVO ATUAL: Marco 5 — Etapa 6: Fase 22 (`fase_22_hairdule_subscription_service`)** — Microsserviço de Subscriptions, Planos Multi-tenant, Stripe Checkout e Webhooks (porta 3007)
+9. **[ ] Marco 5 — Etapa 7: Fase 23 (`fase_08_hairdule_ui_web/features/billing`)** — UI de Planos, Gestão de Assinatura e Faturamento Angular 19
+10. **[ ] Marco 7 — Etapa 3: Fase 31.1 (`PLANO_DETALHE_BARBEARIA_E_GOVERNANCA_ADMIN.md`)** — Detalhe 360° da Barbearia & Governança Admin
 
 ---
 
@@ -160,3 +168,7 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 | **Autenticação & Segurança Web** | **Cookies `HttpOnly; Secure; SameSite=Lax`** como padrão de segurança para o Web SPA. Dual-Mode com suporte a `Authorization: Bearer <token>` para mobile/CLI/testes. Zero tokens no `localStorage`. |
 | **Roteamento de Borda Unificado** | **AWS CloudFront** como Reverse Proxy unificado (`/*` -> S3 Web SPA; `/auth/*`, `/barbershop/*`, `/staff/*`, `/services/*`, `/public/*` -> API Gateway) garantindo Same-Origin e eliminando problemas de CORS. |
 | **Arquitetura Frontend** | [PLANO_MESTRE_DUMB_UI_BACKEND_ABSTRACTION.md](./PLANO_MESTRE_DUMB_UI_BACKEND_ABSTRACTION.md) — **Frontend 'Dumb UI / Pure View'**: Zero joins relacionais em memória JS, Zero regras de negócio no navegador, Endpoints Consolidados por visão no backend (BFF Pattern). |
+| **Observabilidade Técnica & SRE** | [PLANO_OBSERVABILIDADE_TECNICA_SRE.md](./PLANO_OBSERVABILIDADE_TECNICA_SRE.md) — Modelo Híbrido (AWS CloudWatch Dashboards + Aba Saúde dos Serviços no Portal Admin), 4 Golden Signals, Telemetria Serverless e Aurora PG 18.4 |
+| **Observabilidade de Negócio & SuperAdmin** | [PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md](./PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md) — Inteligência SaaS, Métricas Financeiras (MRR/ARR/GMV), Health Score de Barbearias, Backoffice Master e Tela de Saúde dos Serviços |
+| **Governança FinOps & Custos AWS (Staging)** | Aurora Serverless v2 desligado por padrão (acionado via `scripts/start-aurora.ps1`). Schedulers com trava de conectividade socket (`_is_database_available`) para execução limpa em <1.5s com banco offline. Frequência de Schedulers em múltiplos de 5min (`cron(0/5 * * * ? *)`). Retenção CloudWatch Logs em 7 dias. WAF apenas em Produção. |
+| **Estratégia de Conectividade (NAT, Push & Pagamentos)** | Em Staging: 1 NAT Instance (`t4g.nano`) para saída externa com controle de custo (~$7/mês). Arquitetura de Longo Prazo / Produção: Desacoplamento via SQS/EventBridge, mantendo workers de Push (FCM) e Gateways de Pagamento (Stripe) **fora da VPC** para tráfego de internet gratuito ($0,00 de NAT). |
