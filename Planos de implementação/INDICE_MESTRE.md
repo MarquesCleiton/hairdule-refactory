@@ -172,3 +172,23 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 | **Observabilidade de Negócio & SuperAdmin** | [PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md](./PLANO_OBSERVABILIDADE_NEGOCIO_PORTAL_ADMIN.md) — Inteligência SaaS, Métricas Financeiras (MRR/ARR/GMV), Health Score de Barbearias, Backoffice Master e Tela de Saúde dos Serviços |
 | **Governança FinOps & Custos AWS (Staging)** | Aurora Serverless v2 desligado por padrão (acionado via `scripts/start-aurora.ps1`). Schedulers com trava de conectividade socket (`_is_database_available`) para execução limpa em <1.5s com banco offline. Frequência de Schedulers em múltiplos de 5min (`cron(0/5 * * * ? *)`). Retenção CloudWatch Logs em 7 dias. WAF apenas em Produção. |
 | **Estratégia de Conectividade (NAT, Push & Pagamentos)** | Em Staging: 1 NAT Instance (`t4g.nano`) para saída externa com controle de custo (~$7/mês). Arquitetura de Longo Prazo / Produção: Desacoplamento via SQS/EventBridge, mantendo workers de Push (FCM) e Gateways de Pagamento (Stripe) **fora da VPC** para tráfego de internet gratuito ($0,00 de NAT). |
+
+---
+
+## 🛡️ Auditoria 360° de Cibersegurança & Gestão de Vulnerabilidades
+
+> **Relatório Completo:** [Índice Geral de Análise de Segurança 360°](./analise_seguranca_360/INDICE_ANALISE_SEGURANCA.md)  
+> **Status:** [x] ✅ **100% CORRIGIDO** (9/9 vulnerabilidades remediadas e validadas no código em 2026-09-28)
+
+| ID | Status | Severidade | CVSS | Vulnerabilidade | Arquivo |
+|---|---|---|---|---|---|
+| **VULN-01** | [x] ✅ **Corrigido** | 🚨 **CRÍTICA** | **10.0** | Bypass de Assinatura JWT em Rotas Administrativas e Impersonate | [VULN-01](./analise_seguranca_360/VULN-01-CRIT-bypass-assinatura-jwt-admin.md) |
+| **VULN-02** | [x] ✅ **Corrigido** | 🚨 **CRÍTICA** | **9.8** | Chave Secreta JWT Estática/Padrão Carregada no Boot das Lambdas | [VULN-02](./analise_seguranca_360/VULN-02-CRIT-jwt-secret-hardcoded-fallback.md) |
+| **VULN-03** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **8.6** | Endpoint Interno de Notificação e Purge Aberto na Internet | [VULN-03](./analise_seguranca_360/VULN-03-HIGH-internal-notify-sem-autenticacao.md) |
+| **VULN-04** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **8.2** | BOLA / Enumeração de PII e Cancelamento Arbitrário de Agendamentos | [VULN-04](./analise_seguranca_360/VULN-04-HIGH-bola-vazamento-pii-agendamentos.md) |
+| **VULN-05** | [x] ✅ **Corrigido** | 🟡 **MÉDIA** | **6.8** | Stored XSS e Injeção de Conteúdo no Painel de Notificações | [VULN-05](./analise_seguranca_360/VULN-05-MED-stored-xss-notificacoes-dashboard.md) |
+| **VULN-06** | [x] ✅ **Corrigido** | 🟡 **MÉDIA** | **6.1** | Tokens JWT Persistidos em LocalStorage Violando HttpOnly | [VULN-06](./analise_seguranca_360/VULN-06-MED-tokens-sensíveis-localstorage.md) |
+| **VULN-07** | [x] ✅ **Corrigido** | 🟡 **MÉDIA** | **5.9** | Origem HTTP Insegura (S3 Website) com Credenciais no CORS | [VULN-07](./analise_seguranca_360/VULN-07-MED-cors-origem-http-insegura.md) |
+| **VULN-08** | [x] ✅ **Corrigido** | 🟢 **BAIXA** | **4.3** | Ausência de WAF em Staging e Política Permissiva no Cognito | [VULN-08](./analise_seguranca_360/VULN-08-LOW-ausencia-waf-staging-cognito-mfa.md) |
+| **VULN-09** | [x] ✅ **Corrigido** | 🟢 **BAIXA** | **3.7** | Desalinhamento de Roteamento de Microsserviços no CloudFront CDN | [VULN-09](./analise_seguranca_360/VULN-09-LOW-desalinhamento-rotas-cloudfront-cdn.md) |
+
