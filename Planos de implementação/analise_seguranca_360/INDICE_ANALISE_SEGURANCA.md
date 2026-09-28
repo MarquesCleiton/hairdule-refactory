@@ -144,4 +144,7 @@ Para mitigar os riscos de automação abusiva identificados em testes de carga e
 3. 📄 [PLANO-PROT-02: Proteção contra Brute-Force e Abuso no Auth Service](./PLANO-PROT-02-PROTECAO-BRUTE-FORCE-AUTH.md)
 4. 📄 [PLANO-PROT-03: Anti-Scraping e Proteção no Appointment Service](./PLANO-PROT-03-ANTI-SCRAPING-APPOINTMENTS.md)
 5. 📄 [PLANO-PROT-04: Integração com Cloudflare Turnstile (CAPTCHA Invisível)](./PLANO-PROT-04-INTEGRACAO-CAPTCHA-CLOUDFLARE-TURNSTILE.md)
+6. 📄 [PLANO-PROT-05: Geo-Blocking Brasil e Proteção de Origem (Origin Shield)](./PLANO-PROT-05-GEOBLOCKING-E-ORIGIN-SHIELD.md)
+7. 📄 [PLANO-PROT-06: Defesa contra IP Dinâmico, Proxies Residenciais e Botnets](./PLANO-PROT-06-DEFESA-IP-DINAMICO-E-PROXIES.md)
+
 

@@ -198,4 +198,6 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 - [PLANO-PROT-02: Proteção contra Brute-Force e Abuso no Auth Service](./analise_seguranca_360/PLANO-PROT-02-PROTECAO-BRUTE-FORCE-AUTH.md)
 - [PLANO-PROT-03: Anti-Scraping e Proteção no Appointment Service](./analise_seguranca_360/PLANO-PROT-03-ANTI-SCRAPING-APPOINTMENTS.md)
 - [PLANO-PROT-04: Integração com Cloudflare Turnstile (CAPTCHA Invisível)](./analise_seguranca_360/PLANO-PROT-04-INTEGRACAO-CAPTCHA-CLOUDFLARE-TURNSTILE.md)
+- [PLANO-PROT-05: Geo-Blocking Brasil e Proteção de Origem (Origin Shield)](./analise_seguranca_360/PLANO-PROT-05-GEOBLOCKING-E-ORIGIN-SHIELD.md)
+- [PLANO-PROT-06: Defesa contra IP Dinâmico, Proxies Residenciais e Botnets](./analise_seguranca_360/PLANO-PROT-06-DEFESA-IP-DINAMICO-E-PROXIES.md)
 
