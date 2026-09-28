@@ -26,25 +26,27 @@ Identificou-se que **a aplicação responde 200 OK mesmo sob rajadas extremas de
 
 | ID | Status | Vulnerabilidade | Severidade | CVSS v3.1 | Repositório Afetado | Arquivo Detalhado |
 | :---: | :---: | :--- | :---: | :---: | :--- | :--- |
-| **VULN-10** | [ ] 🔴 Pendente | **Ausência de Geo-blocking no CloudFront (Exposição a Scanners Internacionais)** | 🔶 **ALTA** | **7.5** | `fase_20_hairdule_infra_cdn` | [VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md](./VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md) |
-| **VULN-11** | [ ] 🔴 Pendente | **Throttling Permissivo no API Gateway Permitindo Rajadas Rápidas e DoS L7** | 🔶 **ALTA** | **7.8** | `fase_07_hairdule_infra_api` | [VULN-11-HIGH-throttling-permissivo-api-gateway.md](./VULN-11-HIGH-throttling-permissivo-api-gateway.md) |
-| **VULN-12** | [ ] 🔴 Pendente | **Ausência de Rate Limiting por IP e Alvo (E-mail) no Endpoint de Login** | 🔶 **ALTA** | **8.1** | `fase_06_hairdule_auth_service` | [VULN-12-HIGH-bruteforce-credential-stuffing-login.md](./VULN-12-HIGH-bruteforce-credential-stuffing-login.md) |
-| **VULN-13** | [ ] 🔴 Pendente | **Enumeração e Scraping em Massa de PII no Endpoint de Consulta por Telefone** | 🔶 **ALTA** | **8.2** | `fase_17_hairdule_appointment_service` | [VULN-13-HIGH-scraping-pii-clientes-by-phone.md](./VULN-13-HIGH-scraping-pii-clientes-by-phone.md) |
-| **VULN-14** | [ ] 🔴 Pendente | **Flooding de E-mails e Esgotamento de Cota SES via Recuperação de Senha** | 🟡 **MÉDIA** | **6.5** | `fase_06_hairdule_auth_service` | [VULN-14-MED-email-bombing-recuperacao-senha.md](./VULN-14-MED-email-bombing-recuperacao-senha.md) |
-| **VULN-15** | [ ] 🔴 Pendente | **Criação de Agendamentos Falsos (Denial of Business) por Falta de Desafio Anti-Bot** | 🔶 **ALTA** | **7.6** | `fase_08_hairdule_ui_web` / `fase_05_hairdule_shared` | [VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md](./VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md) |
+| **VULN-10** | [x] ✅ Corrigido | **Ausência de Geo-blocking no CloudFront (Exposição a Scanners Internacionais)** | 🔶 **ALTA** | **7.5** | `fase_20_hairdule_infra_cdn` | [VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md](./VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md) |
+| **VULN-11** | [x] ✅ Corrigido | **Throttling Permissivo no API Gateway Permitindo Rajadas Rápidas e DoS L7** | 🔶 **ALTA** | **7.8** | `fase_07_hairdule_infra_api` | [VULN-11-HIGH-throttling-permissivo-api-gateway.md](./VULN-11-HIGH-throttling-permissivo-api-gateway.md) |
+| **VULN-12** | [x] ✅ Corrigido | **Ausência de Rate Limiting por IP e Alvo (E-mail) no Endpoint de Login** | 🔶 **ALTA** | **8.1** | `fase_06_hairdule_auth_service` | [VULN-12-HIGH-bruteforce-credential-stuffing-login.md](./VULN-12-HIGH-bruteforce-credential-stuffing-login.md) |
+| **VULN-13** | [x] ✅ Corrigido | **Enumeração e Scraping em Massa de PII no Endpoint de Consulta por Telefone** | 🔶 **ALTA** | **8.2** | `fase_17_hairdule_appointment_service` | [VULN-13-HIGH-scraping-pii-clientes-by-phone.md](./VULN-13-HIGH-scraping-pii-clientes-by-phone.md) |
+| **VULN-14** | [x] ✅ Corrigido | **Flooding de E-mails e Esgotamento de Cota SES via Recuperação de Senha** | 🟡 **MÉDIA** | **6.5** | `fase_06_hairdule_auth_service` | [VULN-14-MED-email-bombing-recuperacao-senha.md](./VULN-14-MED-email-bombing-recuperacao-senha.md) |
+| **VULN-15** | [x] ✅ Corrigido | **Criação de Agendamentos Falsos (Denial of Business) por Falta de Desafio Anti-Bot** | 🔶 **ALTA** | **7.6** | `fase_08_hairdule_ui_web` / `fase_05_hairdule_shared` | [VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md](./VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md) |
+| **VULN-16** | [x] ✅ Corrigido | **Ausência de Rate Limit em Rotas Autenticadas (Denial of Wallet & Exaustão de Aurora)** | 🔶 **ALTA** | **7.5** | `fase_05_hairdule_shared` / `fase_07_hairdule_infra_api` | [VULN-16-HIGH-ausencia-ratelimit-rotas-autenticadas-dos-custos.md](./VULN-16-HIGH-ausencia-ratelimit-rotas-autenticadas-dos-custos.md) |
 
 ---
 
 ## 3. Roteiro de Implementação em 3 Blocos Táticos
 
 ### 🚀 Bloco 1: Infraestrutura de Borda e Gateway (Mitigação Imediata)
-- [ ] **VULN-10:** Ativar Whitelist `BR` no CloudFront (`fase_20`) para descarte imediato de tráfego fora do Brasil.
-- [ ] **VULN-11:** Implementar `routeSettings` granular no API Gateway (`fase_07`) para responder `429 Too Many Requests` em rajadas a partir de 3 requisições.
+- [x] **VULN-10:** Ativar Whitelist `BR` no CloudFront (`fase_20`) para descarte imediato de tráfego fora do Brasil.
+- [x] **VULN-11:** Implementar `routeSettings` granular no API Gateway (`fase_07`) para responder `429 Too Many Requests` em rajadas a partir de 3 requisições.
 
 ### 🛡️ Bloco 2: Rate Limiting de Aplicação & Proteção por Alvo (Anti IP Dinâmico)
-- [ ] **VULN-12:** Adicionar rate limit por IP e por e-mail no `/auth/login` (`fase_06`).
-- [ ] **VULN-13:** Adicionar rate limit por telefone + IP e detecção de scanner no `/public/appointments/by-phone` (`fase_17`).
-- [ ] **VULN-14:** Adicionar trava de 1 email/15 min por destinatário em `/auth/forgot-password` (`fase_06`).
+- [x] **VULN-12:** Adicionar rate limit por IP e por e-mail no `/auth/login` (`fase_06`).
+- [x] **VULN-13:** Adicionar rate limit por telefone + IP e detecção de scanner no `/public/appointments/by-phone` (`fase_17`).
+- [x] **VULN-14:** Adicionar trava de 1 email/15 min por destinatário em `/auth/forgot-password` (`fase_06`).
 
-### 🤖 Bloco 3: Desafio Anti-Bot Criptográfico Invisível
-- [ ] **VULN-15:** Integrar widget invisível do Cloudflare Turnstile no Angular 19 (`fase_08`) e validador serverless no Shared Layer (`fase_05`).
+### 🤖 Bloco 3: Desafio Anti-Bot Criptográfico Invisível & Rate Limiting Autenticado
+- [x] **VULN-15:** Integrar widget invisível do Cloudflare Turnstile no Angular 19 (`fase_08`) e validador serverless no Shared Layer (`fase_05`).
+- [x] **VULN-16:** Implementar `RateLimiterMiddleware` universal para rotas autenticadas por usuário (120 req/min), tenant (300 req/min) e IP (60 req/min) no Shared Layer (`fase_05`).

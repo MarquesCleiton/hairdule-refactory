@@ -197,15 +197,16 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 ## 🛡️ Auditoria Complementar: Proteção Anti-Fraude, Brute-Force e Botnets
 
 > **Relatório Completo:** [Índice de Proteção Anti-Fraude, Brute-Force e Botnets](./protecao_antifraude_bruteforce_botnet/INDICE_PROTECAO_ANTIFRAUDE.md)  
-> **Status:** [ ] 🔴 **MAPEADO E PRONTO PARA EXECUÇÃO** (VULN-10 a VULN-15)
+> **Status:** [x] ✅ **100% CORRIGIDO** (7/7 vulnerabilidades anti-fraude e DoS remediadas e validadas em 2026-09-28)
 
 | ID | Status | Severidade | CVSS | Vulnerabilidade | Arquivo |
 |---|---|---|---|---|---|
-| **VULN-10** | [ ] 🔴 Pendente | 🔶 **ALTA** | **7.5** | Ausência de Geo-blocking no CloudFront (Exposição Internacional) | [VULN-10](./protecao_antifraude_bruteforce_botnet/VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md) |
-| **VULN-11** | [ ] 🔴 Pendente | 🔶 **ALTA** | **7.8** | Throttling Permissivo no API Gateway Permitindo Rajadas Rápidas | [VULN-11](./protecao_antifraude_bruteforce_botnet/VULN-11-HIGH-throttling-permissivo-api-gateway.md) |
-| **VULN-12** | [ ] 🔴 Pendente | 🔶 **ALTA** | **8.1** | Falta de Rate Limiting por IP e Alvo (E-mail) no Login | [VULN-12](./protecao_antifraude_bruteforce_botnet/VULN-12-HIGH-bruteforce-credential-stuffing-login.md) |
-| **VULN-13** | [ ] 🔴 Pendente | 🔶 **ALTA** | **8.2** | Enumeração e Scraping em Massa de PII por Telefone | [VULN-13](./protecao_antifraude_bruteforce_botnet/VULN-13-HIGH-scraping-pii-clientes-by-phone.md) |
-| **VULN-14** | [ ] 🔴 Pendente | 🟡 **MÉDIA** | **6.5** | Flooding de E-mails e Esgotamento de Cota SES em Forgot-Password | [VULN-14](./protecao_antifraude_bruteforce_botnet/VULN-14-MED-email-bombing-recuperacao-senha.md) |
-| **VULN-15** | [ ] 🔴 Pendente | 🔶 **ALTA** | **7.6** | Criação de Agendamentos Falsos por Ausência de Desafio Anti-Bot | [VULN-15](./protecao_antifraude_bruteforce_botnet/VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md) |
+| **VULN-10** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **7.5** | Ausência de Geo-blocking no CloudFront (Exposição Internacional) | [VULN-10](./protecao_antifraude_bruteforce_botnet/VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md) |
+| **VULN-11** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **7.8** | Throttling Permissivo no API Gateway Permitindo Rajadas Rápidas | [VULN-11](./protecao_antifraude_bruteforce_botnet/VULN-11-HIGH-throttling-permissivo-api-gateway.md) |
+| **VULN-12** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **8.1** | Falta de Rate Limiting por IP e Alvo (E-mail) no Login | [VULN-12](./protecao_antifraude_bruteforce_botnet/VULN-12-HIGH-bruteforce-credential-stuffing-login.md) |
+| **VULN-13** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **8.2** | Enumeração e Scraping em Massa de PII por Telefone | [VULN-13](./protecao_antifraude_bruteforce_botnet/VULN-13-HIGH-scraping-pii-clientes-by-phone.md) |
+| **VULN-14** | [x] ✅ **Corrigido** | 🟡 **MÉDIA** | **6.5** | Flooding de E-mails e Esgotamento de Cota SES em Forgot-Password | [VULN-14](./protecao_antifraude_bruteforce_botnet/VULN-14-MED-email-bombing-recuperacao-senha.md) |
+| **VULN-15** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **7.6** | Criação de Agendamentos Falsos por Ausência de Desafio Anti-Bot | [VULN-15](./protecao_antifraude_bruteforce_botnet/VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md) |
+| **VULN-16** | [x] ✅ **Corrigido** | 🔶 **ALTA** | **7.5** | Ausência de Rate Limit em Rotas Autenticadas (Denial of Wallet & Aurora) | [VULN-16](./protecao_antifraude_bruteforce_botnet/VULN-16-HIGH-ausencia-ratelimit-rotas-autenticadas-dos-custos.md) |
 
 

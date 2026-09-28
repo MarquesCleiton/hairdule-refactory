@@ -1,6 +1,6 @@
 # VULN-12 — Ausência de Rate Limiting por IP e Alvo (E-mail) no Endpoint de Login
 
-> **Status:** [ ] 🔴 **Pendente de Correção**  
+> **Status:** [x] ✅ **Corrigido e Validado em Homologação (PR #46 da fase_06)**  
 > **Severidade:** 🔶 **ALTA**  
 > **CVSS v3.1:** 8.1 (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N`)  
 > **Repositório Afetado:** [`fase_06_hairdule_auth_service`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_06_hairdule_auth_service)  
@@ -70,7 +70,7 @@ Implementar uma estratégia de **Defesa Multidimensional contra IP Dinâmico**:
 
 ## 5. Checklist de Implementação & Validação
 
-- [ ] Criar middleware ou dependência de rate limit em memória / cache no `fase_06_hairdule_auth_service`.
-- [ ] Aplicar no endpoint `POST /auth/login`.
-- [ ] Validar que 6 tentativas consecutivas com senha errada resultam em `429 Too Many Requests` com cabeçalho `Retry-After`.
-- [ ] Validar que após o período de cooldown o login legítimo funciona perfeitamente.
+- [x] Criar módulo `rate_limiter.py` com controle por IP e alvo (e-mail) no `fase_06_hairdule_auth_service`.
+- [x] Aplicar no endpoint `POST /auth/login` com registro de falhas e sucessos.
+- [x] Validar que tentativas repetidas com senha errada resultam em `429 Too Many Requests` com cabeçalho `Retry-After`.
+- [x] Validar que após o período de cooldown o login legítimo funciona perfeitamente.

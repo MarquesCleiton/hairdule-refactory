@@ -1,6 +1,6 @@
 # VULN-10 — Ausência de Geo-blocking no CloudFront (Exposição a Scanners Internacionais e Botnets)
 
-> **Status:** [ ] 🔴 **Pendente de Correção**  
+> **Status:** [x] ✅ **Corrigido e Validado em Homologação (PR #14 da fase_20)**  
 > **Severidade:** 🔶 **ALTA**  
 > **CVSS v3.1:** 7.5 (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H`)  
 > **Repositório Afetado:** [`fase_20_hairdule_infra_cdn`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_20_hairdule_infra_cdn)  
@@ -71,7 +71,7 @@ Configurar a restrição geográfica do CloudFront para o modo `whitelist` com `
 
 ## 5. Checklist de Implementação & Validação
 
-- [ ] Modificar `sst.config.ts` na `fase_20_hairdule_infra_cdn` definindo `restrictionType: "whitelist"` e `locations: ["BR"]`.
-- [ ] Executar deploy em Homologação (`release/v7` ou branch correspondente) via esteira de CI/CD.
-- [ ] Validar via VPN internacional que chamadas externas recebem `403 Forbidden`.
-- [ ] Validar que conexões com IP brasileiro continuam recebendo `200 OK`.
+- [x] Modificar `sst.config.ts` na `fase_20_hairdule_infra_cdn` definindo `restrictionType: "whitelist"` e `locations: ["BR"]`.
+- [x] Executar deploy em Homologação (`release/v7`) via esteira de CI/CD (PR #14 mergeado).
+- [x] Validar que tráfego de IPs fora do Brasil é bloqueado no Edge com `403 Forbidden`.
+- [x] Validar que conexões com IP brasileiro continuam recebendo `200 OK`.

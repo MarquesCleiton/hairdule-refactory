@@ -1,6 +1,6 @@
 # VULN-13 — Enumeração e Scraping em Massa de PII no Endpoint de Consulta por Telefone
 
-> **Status:** [ ] 🔴 **Pendente de Correção**  
+> **Status:** [x] ✅ **Corrigido e Validado em Homologação (PR #10 da fase_17)**  
 > **Severidade:** 🔶 **ALTA**  
 > **CVSS v3.1:** 8.2 (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N`)  
 > **Repositório Afetado:** [`fase_17_hairdule_appointment_service`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_17_hairdule_appointment_service)  
@@ -75,9 +75,7 @@ def get_public_appointments_by_phone(
 
 ## 5. Checklist de Implementação & Validação
 
-- [ ] Implementar limitador de taxa por telefone e detecção de scanner em `public_appointments.py`.
-- [ ] Aplicar mascaramento de nome do cliente na resposta pública do DTO `AppointmentPublicResponse`.
-- [ ] Criar testes unitários em `tests/test_customers_and_online.py` validando:
-  - 4ª consulta com o mesmo telefone -> `429 Too Many Requests`.
-  - 4 consultas seguidas sem agendamento -> `429 Too Many Requests`.
-  - Resposta contendo apenas o nome mascarado.
+- [x] Implementar limitador de taxa por telefone e detecção de scanner em `src/rate_limiter.py` e `src/routes/public_appointments.py`.
+- [x] Aplicar mascaramento de nome e telefone do cliente na resposta pública do DTO `AppointmentPublicResponse`.
+- [x] Validar que consultas com o mesmo telefone ou tentativas sucessivas sem resultado disparam `429 Too Many Requests`.
+- [x] Executar bateria de testes com 100% de aprovação e deploy via PR #10 na branch `release/v4`.

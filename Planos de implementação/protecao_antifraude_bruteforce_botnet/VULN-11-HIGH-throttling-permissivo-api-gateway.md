@@ -1,6 +1,6 @@
 # VULN-11 — Throttling Permissivo no API Gateway Permitindo Rajadas Rápidas e DoS L7
 
-> **Status:** [ ] 🔴 **Pendente de Correção**  
+> **Status:** [x] ✅ **Corrigido e Validado em Homologação (PR #58 da fase_07)**  
 > **Severidade:** 🔶 **ALTA**  
 > **CVSS v3.1:** 7.8 (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H`)  
 > **Repositório Afetado:** [`fase_07_hairdule_infra_api`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_07_hairdule_infra_api)  
@@ -106,10 +106,10 @@ Adicionar a propriedade `routeSettings` no recurso `aws.apigatewayv2.Stage` defi
 
 ## 5. Checklist de Implementação & Validação
 
-- [ ] Atualizar `sst.config.ts` na `fase_07_hairdule_infra_api` com o array `routeSettings`.
-- [ ] Executar deploy em Homologação (`release/v19`).
-- [ ] Disparar requisições em rajada a cada `0,01s` via Insomnia ou script no endpoint `GET /public/appointments/by-phone`.
-- [ ] Validar que a partir da 4ª requisição o Gateway devolve imediatamente:
+- [x] Atualizar `sst.config.ts` na `fase_07_hairdule_infra_api` com o array `routeSettings`.
+- [x] Executar deploy em Homologação (`release/v19`) via esteira de CI/CD (PR #58 mergeado).
+- [x] Disparar requisições em rajada a cada `0,01s` via Insomnia ou script no endpoint `GET /public/appointments/by-phone`.
+- [x] Validar que a partir da 4ª requisição o Gateway devolve imediatamente:
   ```http
   HTTP/1.1 429 Too Many Requests
   {"message": "Too Many Requests"}

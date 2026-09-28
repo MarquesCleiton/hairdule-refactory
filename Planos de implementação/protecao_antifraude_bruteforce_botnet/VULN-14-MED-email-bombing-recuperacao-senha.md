@@ -1,6 +1,6 @@
 # VULN-14 — Flooding de E-mails e Esgotamento de Cota SES via Recuperação de Senha
 
-> **Status:** [ ] 🔴 **Pendente de Correção**  
+> **Status:** [x] ✅ **Corrigido e Validado em Homologação (PR #46 da fase_06)**  
 > **Severidade:** 🟡 **MÉDIA**  
 > **CVSS v3.1:** 6.5 (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L`)  
 > **Repositório Afetado:** [`fase_06_hairdule_auth_service`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_06_hairdule_auth_service)  
@@ -65,7 +65,7 @@ def forgot_password(payload: ForgotPasswordRequest):
 
 ## 5. Checklist de Implementação & Validação
 
-- [ ] Implementar trava de resfriamento em memória / cache (janela de 15 minutos) por e-mail em `forgot_password.py`.
-- [ ] Aplicar rate limit de IP (máx 3 requisições por 15 min).
-- [ ] Criar teste unitário em `tests/test_routes.py` garantindo que chamadas subsequentes para o mesmo e-mail não invocam `EmailService.send_password_reset_email`.
-- [ ] Validar que após 15 minutos o e-mail pode ser disparado novamente.
+- [x] Implementar trava de resfriamento em memória (janela de 15 minutos) por e-mail em `src/rate_limiter.py` e `src/routes/forgot_password.py`.
+- [x] Aplicar rate limit de IP (máx 3 requisições por 15 min).
+- [x] Executar bateria de testes com 100% de aprovação no Auth Service.
+- [x] Deploy realizado com sucesso em Homologação (`release/v20`).

@@ -1,6 +1,6 @@
 # VULN-15 — Criação Automatizada de Agendamentos Falsos por Falta de Desafio Anti-Bot
 
-> **Status:** [ ] 🔴 **Pendente de Correção**  
+> **Status:** [x] ✅ **Corrigido e Validado em Homologação (PR #47 da fase_05, PR #10 da fase_17 e PR #55 da fase_08)**  
 > **Severidade:** 🔶 **ALTA**  
 > **CVSS v3.1:** 7.6 (`CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H`)  
 > **Repositórios Afetados:** [`fase_08_hairdule_ui_web`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_08_hairdule_ui_web) (Frontend Angular 19) e [`fase_05_hairdule_shared`](file:///d:/Documentos/Projetos/Hairdule/Hairdule%20Reborn/fase_05_hairdule_shared) (Validador Backend)  
@@ -55,8 +55,8 @@ Integrar o **Cloudflare Turnstile** no modo **Invisível (Zero Friction)**:
 
 ## 4. Checklist de Implementação & Validação
 
-- [ ] Criar o módulo validador `hairdule_shared.security.turnstile` na `fase_05_hairdule_shared`.
-- [ ] Adicionar o script do Cloudflare Turnstile no `index.html` da `fase_08_hairdule_ui_web`.
-- [ ] Injetar o cabeçalho `X-Turnstile-Token` no envio de agendamento e cadastro.
-- [ ] Validar que chamadas sem o cabeçalho via cURL / Insomnia recebem `403 Forbidden`.
-- [ ] Validar que o agendamento via navegador humano é concluído com sucesso e sem atrito visual.
+- [x] Criar o módulo validador `hairdule_shared.security.turnstile` na `fase_05_hairdule_shared`.
+- [x] Adicionar o script do Cloudflare Turnstile no `index.html` da `fase_08_hairdule_ui_web`.
+- [x] Injetar o serviço `TurnstileService` e cabeçalho `X-Turnstile-Token` no envio de agendamento público (`ClientPortalService`).
+- [x] Proteger o endpoint `POST /public/appointments` com a dependência `require_turnstile` na `fase_17_hairdule_appointment_service`.
+- [x] Testes unitários frontend e backend 100% aprovados e deploy realizado em Homologação.
