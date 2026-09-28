@@ -192,12 +192,20 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 | **VULN-08** | [x] ✅ **Corrigido** | 🟢 **BAIXA** | **4.3** | Ausência de WAF em Staging e Política Permissiva no Cognito | [VULN-08](./analise_seguranca_360/VULN-08-LOW-ausencia-waf-staging-cognito-mfa.md) |
 | **VULN-09** | [x] ✅ **Corrigido** | 🟢 **BAIXA** | **3.7** | Desalinhamento de Roteamento de Microsserviços no CloudFront CDN | [VULN-09](./analise_seguranca_360/VULN-09-LOW-desalinhamento-rotas-cloudfront-cdn.md) |
 
-### 🛡️ Planos Específicos: Defesa Anti-Bot, Anti-Scraping & Brute-Force
-- [PLANO MESTRE: Defesa contra Brute-Force, Anti-Scraping e Defesa Anti-Bot](./analise_seguranca_360/PLANO_PROTECAO_SISTEMA_BRUTEFORCE_ANTISCRAPING.md)
-- [PLANO-PROT-01: RouteSettings e Throttling no AWS API Gateway](./analise_seguranca_360/PLANO-PROT-01-RATE-LIMITING-API-GATEWAY.md)
-- [PLANO-PROT-02: Proteção contra Brute-Force e Abuso no Auth Service](./analise_seguranca_360/PLANO-PROT-02-PROTECAO-BRUTE-FORCE-AUTH.md)
-- [PLANO-PROT-03: Anti-Scraping e Proteção no Appointment Service](./analise_seguranca_360/PLANO-PROT-03-ANTI-SCRAPING-APPOINTMENTS.md)
-- [PLANO-PROT-04: Integração com Cloudflare Turnstile (CAPTCHA Invisível)](./analise_seguranca_360/PLANO-PROT-04-INTEGRACAO-CAPTCHA-CLOUDFLARE-TURNSTILE.md)
-- [PLANO-PROT-05: Geo-Blocking Brasil e Proteção de Origem (Origin Shield)](./analise_seguranca_360/PLANO-PROT-05-GEOBLOCKING-E-ORIGIN-SHIELD.md)
-- [PLANO-PROT-06: Defesa contra IP Dinâmico, Proxies Residenciais e Botnets](./analise_seguranca_360/PLANO-PROT-06-DEFESA-IP-DINAMICO-E-PROXIES.md)
+---
+
+## 🛡️ Auditoria Complementar: Proteção Anti-Fraude, Brute-Force e Botnets
+
+> **Relatório Completo:** [Índice de Proteção Anti-Fraude, Brute-Force e Botnets](./protecao_antifraude_bruteforce_botnet/INDICE_PROTECAO_ANTIFRAUDE.md)  
+> **Status:** [ ] 🔴 **MAPEADO E PRONTO PARA EXECUÇÃO** (VULN-10 a VULN-15)
+
+| ID | Status | Severidade | CVSS | Vulnerabilidade | Arquivo |
+|---|---|---|---|---|---|
+| **VULN-10** | [ ] 🔴 Pendente | 🔶 **ALTA** | **7.5** | Ausência de Geo-blocking no CloudFront (Exposição Internacional) | [VULN-10](./protecao_antifraude_bruteforce_botnet/VULN-10-HIGH-geoblocking-ausente-exposicao-internacional.md) |
+| **VULN-11** | [ ] 🔴 Pendente | 🔶 **ALTA** | **7.8** | Throttling Permissivo no API Gateway Permitindo Rajadas Rápidas | [VULN-11](./protecao_antifraude_bruteforce_botnet/VULN-11-HIGH-throttling-permissivo-api-gateway.md) |
+| **VULN-12** | [ ] 🔴 Pendente | 🔶 **ALTA** | **8.1** | Falta de Rate Limiting por IP e Alvo (E-mail) no Login | [VULN-12](./protecao_antifraude_bruteforce_botnet/VULN-12-HIGH-bruteforce-credential-stuffing-login.md) |
+| **VULN-13** | [ ] 🔴 Pendente | 🔶 **ALTA** | **8.2** | Enumeração e Scraping em Massa de PII por Telefone | [VULN-13](./protecao_antifraude_bruteforce_botnet/VULN-13-HIGH-scraping-pii-clientes-by-phone.md) |
+| **VULN-14** | [ ] 🔴 Pendente | 🟡 **MÉDIA** | **6.5** | Flooding de E-mails e Esgotamento de Cota SES em Forgot-Password | [VULN-14](./protecao_antifraude_bruteforce_botnet/VULN-14-MED-email-bombing-recuperacao-senha.md) |
+| **VULN-15** | [ ] 🔴 Pendente | 🔶 **ALTA** | **7.6** | Criação de Agendamentos Falsos por Ausência de Desafio Anti-Bot | [VULN-15](./protecao_antifraude_bruteforce_botnet/VULN-15-HIGH-fake-bookings-ausencia-captcha-turnstile.md) |
+
 

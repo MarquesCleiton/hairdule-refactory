@@ -135,16 +135,11 @@ Clique nos links abaixo para acessar a análise completa de cada item:
 
 ---
 
-## 🛡️ Planos de Defesa Adicionais: Brute-Force, Anti-Scraping e CAPTCHA
+## 🛡️ Planos Adicionais: Proteção Anti-Fraude, Brute-Force e Botnets
 
-Para mitigar os riscos de automação abusiva identificados em testes de carga e força bruta:
+Para as vulnerabilidades de abuso de taxa, força bruta, scraping e bots identificadas em testes de estresse:
 
-1. 📄 [PLANO MESTRE: Defesa contra Brute-Force, Anti-Scraping e Defesa Anti-Bot](./PLANO_PROTECAO_SISTEMA_BRUTEFORCE_ANTISCRAPING.md)
-2. 📄 [PLANO-PROT-01: RouteSettings e Throttling no AWS API Gateway](./PLANO-PROT-01-RATE-LIMITING-API-GATEWAY.md)
-3. 📄 [PLANO-PROT-02: Proteção contra Brute-Force e Abuso no Auth Service](./PLANO-PROT-02-PROTECAO-BRUTE-FORCE-AUTH.md)
-4. 📄 [PLANO-PROT-03: Anti-Scraping e Proteção no Appointment Service](./PLANO-PROT-03-ANTI-SCRAPING-APPOINTMENTS.md)
-5. 📄 [PLANO-PROT-04: Integração com Cloudflare Turnstile (CAPTCHA Invisível)](./PLANO-PROT-04-INTEGRACAO-CAPTCHA-CLOUDFLARE-TURNSTILE.md)
-6. 📄 [PLANO-PROT-05: Geo-Blocking Brasil e Proteção de Origem (Origin Shield)](./PLANO-PROT-05-GEOBLOCKING-E-ORIGIN-SHIELD.md)
-7. 📄 [PLANO-PROT-06: Defesa contra IP Dinâmico, Proxies Residenciais e Botnets](./PLANO-PROT-06-DEFESA-IP-DINAMICO-E-PROXIES.md)
+👉 Acesse a pasta dedicada: [**Índice de Proteção Anti-Fraude, Brute-Force e Botnets**](../protecao_antifraude_bruteforce_botnet/INDICE_PROTECAO_ANTIFRAUDE.md) (VULN-10 a VULN-15).
+
 
 
