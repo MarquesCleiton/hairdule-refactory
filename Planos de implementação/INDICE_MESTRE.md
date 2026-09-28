@@ -192,3 +192,10 @@ MARCO 6: Fase 28 (Infra & Templates SES) ✅ ──► Fase 29 (Backend Auth & S
 | **VULN-08** | [x] ✅ **Corrigido** | 🟢 **BAIXA** | **4.3** | Ausência de WAF em Staging e Política Permissiva no Cognito | [VULN-08](./analise_seguranca_360/VULN-08-LOW-ausencia-waf-staging-cognito-mfa.md) |
 | **VULN-09** | [x] ✅ **Corrigido** | 🟢 **BAIXA** | **3.7** | Desalinhamento de Roteamento de Microsserviços no CloudFront CDN | [VULN-09](./analise_seguranca_360/VULN-09-LOW-desalinhamento-rotas-cloudfront-cdn.md) |
 
+### 🛡️ Planos Específicos: Defesa Anti-Bot, Anti-Scraping & Brute-Force
+- [PLANO MESTRE: Defesa contra Brute-Force, Anti-Scraping e Defesa Anti-Bot](./analise_seguranca_360/PLANO_PROTECAO_SISTEMA_BRUTEFORCE_ANTISCRAPING.md)
+- [PLANO-PROT-01: RouteSettings e Throttling no AWS API Gateway](./analise_seguranca_360/PLANO-PROT-01-RATE-LIMITING-API-GATEWAY.md)
+- [PLANO-PROT-02: Proteção contra Brute-Force e Abuso no Auth Service](./analise_seguranca_360/PLANO-PROT-02-PROTECAO-BRUTE-FORCE-AUTH.md)
+- [PLANO-PROT-03: Anti-Scraping e Proteção no Appointment Service](./analise_seguranca_360/PLANO-PROT-03-ANTI-SCRAPING-APPOINTMENTS.md)
+- [PLANO-PROT-04: Integração com Cloudflare Turnstile (CAPTCHA Invisível)](./analise_seguranca_360/PLANO-PROT-04-INTEGRACAO-CAPTCHA-CLOUDFLARE-TURNSTILE.md)
+

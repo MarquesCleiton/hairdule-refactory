@@ -132,3 +132,16 @@ Clique nos links abaixo para acessar a análise completa de cada item:
 7. 📄 [VULN-07: Origem HTTP Insegura Permitida com Credenciais no CORS](./VULN-07-MED-cors-origem-http-insegura.md)
 8. 📄 [VULN-08: Ausência de WAF em Staging e Política Permissiva no Cognito](./VULN-08-LOW-ausencia-waf-staging-cognito-mfa.md)
 9. 📄 [VULN-09: Desalinhamento de Rotas de Microsserviços no CloudFront CDN](./VULN-09-LOW-desalinhamento-rotas-cloudfront-cdn.md)
+
+---
+
+## 🛡️ Planos de Defesa Adicionais: Brute-Force, Anti-Scraping e CAPTCHA
+
+Para mitigar os riscos de automação abusiva identificados em testes de carga e força bruta:
+
+1. 📄 [PLANO MESTRE: Defesa contra Brute-Force, Anti-Scraping e Defesa Anti-Bot](./PLANO_PROTECAO_SISTEMA_BRUTEFORCE_ANTISCRAPING.md)
+2. 📄 [PLANO-PROT-01: RouteSettings e Throttling no AWS API Gateway](./PLANO-PROT-01-RATE-LIMITING-API-GATEWAY.md)
+3. 📄 [PLANO-PROT-02: Proteção contra Brute-Force e Abuso no Auth Service](./PLANO-PROT-02-PROTECAO-BRUTE-FORCE-AUTH.md)
+4. 📄 [PLANO-PROT-03: Anti-Scraping e Proteção no Appointment Service](./PLANO-PROT-03-ANTI-SCRAPING-APPOINTMENTS.md)
+5. 📄 [PLANO-PROT-04: Integração com Cloudflare Turnstile (CAPTCHA Invisível)](./PLANO-PROT-04-INTEGRACAO-CAPTCHA-CLOUDFLARE-TURNSTILE.md)
+
